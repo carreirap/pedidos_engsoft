@@ -12,7 +12,6 @@ public class ConnectionDB {
 	
 	private ConnectionDB() {
 		try {
-			// Class.forName("org.hsqldb.jdbc.JDBCDriver");
 			Class.forName("org.hsqldb.jdbcDriver");
 
 			conn = DriverManager.getConnection("jdbc:hsqldb:file:mydbpedidos", "sa", "");
@@ -24,8 +23,6 @@ public class ConnectionDB {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	
