@@ -10,21 +10,19 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ClienteTableModel;
-import javax.swing.JScrollPane;
 
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelCliente;
-	private JTable table;
-	private JTable table_1;
-	private JTable table_2;
+	
+	
 //	private JTable table;
 
 	/**
@@ -75,8 +73,7 @@ public class MainWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
 		
-		createClientePanel();
-		
+				
 	}
 
 	private void createClientePanel() {
@@ -85,54 +82,51 @@ public class MainWindow extends JFrame {
 		panelCliente.setLayout(null);
 		
 		JLabel lblCpf = new JLabel("CPF:");
-		lblCpf.setBounds(66, 47, 40, 16);
+		lblCpf.setBounds(53, 299, 38, 16);
 		panelCliente.add(lblCpf);
 		
 		JTextField inputCPF = new JTextField();
-		inputCPF.setBounds(104, 44, 215, 22);
+		inputCPF.setBounds(103, 296, 215, 22);
 		panelCliente.add(inputCPF);
 		inputCPF.setColumns(10);
 		
 		JLabel lblNome = new JLabel("Nome:");
-		lblNome.setBounds(54, 79, 40, 16);
+		lblNome.setBounds(53, 235, 46, 16);
 		panelCliente.add(lblNome);
 		
 		JTextField inputNomecliente = new JTextField();
-		inputNomecliente.setBounds(104, 76, 116, 22);
+		inputNomecliente.setBounds(103, 232, 116, 22);
 		panelCliente.add(inputNomecliente);
 		inputNomecliente.setColumns(10);
-		System.out.println("XXXXXXXXXXXXxxxxxxxx");
+		
 		contentPane.add(panelCliente, "name_9242687062646");
 		
 		JLabel lblSobreNome = new JLabel("Sobre Nome:");
-		lblSobreNome.setBounds(12, 114, 79, 16);
+		lblSobreNome.setBounds(16, 267, 75, 16);
 		panelCliente.add(lblSobreNome);
 		
 		JTextField inputSobreNome = new JTextField();
-		inputSobreNome.setBounds(104, 111, 199, 22);
+		inputSobreNome.setBounds(103, 263, 199, 22);
 		panelCliente.add(inputSobreNome);
 		inputSobreNome.setColumns(10);
 		
 		JButton btnSalvar = new JButton("Salvar");
-		btnSalvar.setBounds(204, 158, 97, 25);
+		btnSalvar.setBounds(197, 329, 97, 25);
 		panelCliente.add(btnSalvar);
 		
 		JButton btnExcluir = new JButton("Excluir");
-		btnExcluir.setBounds(316, 158, 97, 25);
+		btnExcluir.setBounds(309, 329, 97, 25);
 		panelCliente.add(btnExcluir);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(33, 212, 547, 122);
-		panelCliente.add(scrollPane);
+		ClienteTableModel model =new ClienteTableModel();
 		
-		JScrollBar scrollBar = new JScrollBar();
-		scrollPane.setViewportView(scrollBar);
-		
-		table_2 = new JTable();
-		scrollPane.setColumnHeaderView(table_2);
-		
-		
+		JTable table = new JTable(model);
+		table.setColumnSelectionAllowed(true);
+		table.setBounds(104, 284, 1, 1);
 				
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(23, 28, 581, 174);
+		panelCliente.add(scrollPane);
 		
 		panelCliente.setVisible(true);
 		

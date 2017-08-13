@@ -2,15 +2,32 @@ package br.ufpr.engsoft.pedidoprodutos.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ConnectionDB {
 	
 	private static ConnectionDB connection;
+	
 	private Connection conn;
 	
 	private ConnectionDB() {
+		
+	}
+	
+	
+	public static ConnectionDB getInstance() {
+		synchronized (connection) {
+			if (connection == null) {
+				connection = new ConnectionDB();
+			}
+		}
+		
+		return connection;
+	}
+	
+	public void conectar() {
 		try {
 			Class.forName("org.hsqldb.jdbcDriver");
 
@@ -25,16 +42,20 @@ public class ConnectionDB {
 		}
 	}
 	
-	
-	public static ConnectionDB getInstance() {
-		synchronized (connection) {
-			if (connection == null) {
-				connection = new ConnectionDB();
-			}
+	public void desconectar() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		
-		return connection;
 	}
+	
+	
+	public PreparedStatement prepareSQL(String sql) throws SQLException {
+		return conn.prepareStatement(sql);
+	}
+	
+	
 	
 	public void createDB() {
 		
