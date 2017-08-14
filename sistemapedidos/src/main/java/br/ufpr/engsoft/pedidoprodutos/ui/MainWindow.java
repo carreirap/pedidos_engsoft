@@ -22,9 +22,10 @@ public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelCliente;
+	private JPanel panelProduto;
 	private JTable table;
-	private JTable table_1;
-	private JTable table_2;
+	
+	
 //	private JTable table;
 
 	/**
@@ -58,7 +59,7 @@ public class MainWindow extends JFrame {
 		
 		JMenuItem mntmCadastro = new JMenuItem("Cadastro");
 		mntmCadastro.addActionListener(
-			ev -> { createClientePanel(); }	
+			ev -> { removePanels(); createClientePanel(); }	
 		);
 		mnCliente.add(mntmCadastro);
 		
@@ -70,13 +71,63 @@ public class MainWindow extends JFrame {
 		
 		JMenu mnProduto = new JMenu("Produto");
 		menuBar.add(mnProduto);
+		
+		JMenuItem mntmCadastrar_1 = new JMenuItem("Cadastrar");
+		mnProduto.add(mntmCadastrar_1);
+		mntmCadastrar_1.addActionListener(
+				e -> {removePanels(); createPanelProduto();});
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
+						
+			
 		
-		createClientePanel();
 		
+		//createClientePanel();
+		
+	}
+	
+	private void removePanels() {
+		if (panelCliente != null) { 
+			contentPane.remove(panelCliente);
+		}
+		if (panelProduto != null) { 
+			contentPane.remove(panelProduto); 
+		}
+		
+	}
+
+	private void createPanelProduto() {
+		
+		panelProduto = new JPanel();
+		panelProduto.setBounds(10, 11, 593, 357);
+		panelProduto.setLayout(null);
+		contentPane.add(panelProduto);
+		
+		JLabel lblNewLabel = new JLabel("ID:");
+		lblNewLabel.setBounds(47, 52, 41, 14);
+		panelProduto.add(lblNewLabel);
+		
+		JTextField inputId = new JTextField();
+		inputId.setBounds(86, 49, 86, 20);
+		panelProduto.add(inputId);
+		inputId.setColumns(10);
+		
+		JLabel lblDescrio = new JLabel("Descrição:");
+		lblDescrio.setBounds(20, 86, 78, 14);
+		panelProduto.add(lblDescrio);
+		
+		JTextField inputDescr = new JTextField();
+		inputDescr.setBounds(86, 80, 234, 20);
+		panelProduto.add(inputDescr);
+		inputDescr.setColumns(10);
+		
+		panelProduto.setVisible(true);
+		
+		contentPane.revalidate();
+		contentPane.repaint();
 	}
 
 	private void createClientePanel() {
@@ -85,7 +136,7 @@ public class MainWindow extends JFrame {
 		panelCliente.setLayout(null);
 		
 		JLabel lblCpf = new JLabel("CPF:");
-		lblCpf.setBounds(66, 47, 40, 16);
+		lblCpf.setBounds(68, 47, 32, 16);
 		panelCliente.add(lblCpf);
 		
 		JTextField inputCPF = new JTextField();
@@ -94,7 +145,7 @@ public class MainWindow extends JFrame {
 		inputCPF.setColumns(10);
 		
 		JLabel lblNome = new JLabel("Nome:");
-		lblNome.setBounds(54, 79, 40, 16);
+		lblNome.setBounds(62, 79, 40, 16);
 		panelCliente.add(lblNome);
 		
 		JTextField inputNomecliente = new JTextField();
@@ -105,7 +156,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(panelCliente, "name_9242687062646");
 		
 		JLabel lblSobreNome = new JLabel("Sobre Nome:");
-		lblSobreNome.setBounds(12, 114, 79, 16);
+		lblSobreNome.setBounds(20, 114, 80, 16);
 		panelCliente.add(lblSobreNome);
 		
 		JTextField inputSobreNome = new JTextField();
@@ -128,11 +179,8 @@ public class MainWindow extends JFrame {
 		JScrollBar scrollBar = new JScrollBar();
 		scrollPane.setViewportView(scrollBar);
 		
-		table_2 = new JTable();
+		JTable table_2 = new JTable();
 		scrollPane.setColumnHeaderView(table_2);
-		
-		
-				
 		
 		panelCliente.setVisible(true);
 		
