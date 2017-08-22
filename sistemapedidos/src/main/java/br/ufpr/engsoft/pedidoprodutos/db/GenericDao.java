@@ -11,7 +11,9 @@ public abstract class GenericDao<T> {
 	
 	abstract void delete(int id) throws SQLException;
 	
-	abstract List<T> selectById(int id) throws SQLException;
+	abstract List<T> selectByDescricao(String descricao) throws SQLException;
+	
+	abstract T findById(int id) throws SQLException;;
 	
 	abstract void updateById(T object) throws SQLException;
 		

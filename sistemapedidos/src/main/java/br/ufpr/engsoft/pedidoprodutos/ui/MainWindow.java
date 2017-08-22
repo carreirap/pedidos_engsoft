@@ -23,6 +23,7 @@ public class MainWindow extends JFrame {
 	private JPanel contentPane;
 	private JPanel panelCliente;
 	private JPanel panelProduto;
+	private JTextField textField;
 	
 	
 //	private JTable table;
@@ -82,7 +83,7 @@ public class MainWindow extends JFrame {
 		contentPane.setLayout(new CardLayout(0, 0));
 						
 			
-		
+		createPanelProduto();
 		
 		//createClientePanel();
 		
@@ -110,10 +111,18 @@ public class MainWindow extends JFrame {
 		panelProduto.add(lblNewLabel);
 		
 		JTextField inputId = new JTextField();
-		inputId.setBounds(86, 49, 86, 20);
+		inputId.setBounds(111, 49, 86, 20);
 		panelProduto.add(inputId);
 		inputId.setColumns(10);
 		
+		JTextField inputDescrProduto = new JTextField();
+		inputDescrProduto.setBounds(110, 102, 116, 22);
+		panelProduto.add(inputDescrProduto);
+		inputDescrProduto.setColumns(10);
+		
+		JLabel lblDescricao = new JLabel("Descrição:");
+		lblDescricao.setBounds(17, 105, 69, 16);
+		panelProduto.add(lblDescricao);
 				
 		contentPane.revalidate();
 		contentPane.repaint();
@@ -125,31 +134,31 @@ public class MainWindow extends JFrame {
 		panelCliente.setLayout(null);
 		
 		JLabel lblCpf = new JLabel("CPF:");
-		lblCpf.setBounds(53, 299, 38, 16);
+		lblCpf.setBounds(53, 114, 38, 16);
 		panelCliente.add(lblCpf);
 		
 		JTextField inputCPF = new JTextField();
-		inputCPF.setBounds(104, 44, 215, 22);
+		inputCPF.setBounds(103, 111, 147, 22);
 		panelCliente.add(inputCPF);
 		inputCPF.setColumns(10);
 		
 		JLabel lblNome = new JLabel("Nome:");
-		lblNome.setBounds(53, 235, 46, 16);
+		lblNome.setBounds(53, 47, 46, 16);
 		panelCliente.add(lblNome);
 		
 		JTextField inputNomecliente = new JTextField();
-		inputNomecliente.setBounds(104, 76, 116, 22);
+		inputNomecliente.setBounds(104, 44, 116, 22);
 		panelCliente.add(inputNomecliente);
 		inputNomecliente.setColumns(10);
 		System.out.println("XXXXXXXXXXXXxxxxxxxx");
 		contentPane.add(panelCliente, "name_9242687062646");
 		
 		JLabel lblSobreNome = new JLabel("Sobre Nome:");
-		lblSobreNome.setBounds(16, 267, 75, 16);
+		lblSobreNome.setBounds(12, 79, 85, 16);
 		panelCliente.add(lblSobreNome);
 		
 		JTextField inputSobreNome = new JTextField();
-		inputSobreNome.setBounds(104, 111, 199, 22);
+		inputSobreNome.setBounds(103, 76, 199, 22);
 		panelCliente.add(inputSobreNome);
 		inputSobreNome.setColumns(10);
 		
@@ -161,17 +170,15 @@ public class MainWindow extends JFrame {
 		btnExcluir.setBounds(316, 158, 97, 25);
 		panelCliente.add(btnExcluir);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(33, 212, 547, 122);
-		panelCliente.add(scrollPane);
+		ClienteTableModel model = new ClienteTableModel();
 		
 		JTable table = new JTable(model);
 		table.setColumnSelectionAllowed(true);
 		table.setBounds(104, 284, 1, 1);
 				
-		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(23, 28, 581, 174);
-		panelCliente.add(scrollPane);
+		JScrollPane scrollPane2 = new JScrollPane(table);
+		scrollPane2.setBounds(22, 192, 581, 146);
+		panelCliente.add(scrollPane2);
 		
 		panelCliente.setVisible(true);
 		
