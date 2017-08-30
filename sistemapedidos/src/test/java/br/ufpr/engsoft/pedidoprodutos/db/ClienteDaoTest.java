@@ -5,20 +5,34 @@ import static org.junit.Assert.fail;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.testng.Assert;
 
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
 
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ClienteDaoTest {
 
 //	@Test
 //	public void test() {
 //		fail("Not yet implemented");
 //	}
+	@Test
+	public void test0clean() {
+		ClienteDAO dao = new ClienteDAO();
+		try {
+			dao.cleanUp();
+			Assert.assertEquals(true, true);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
 	
 	@Test
-	public void testInsertCliente() {
+	public void test1InsertCliente() {
 		ClienteDAO dao = new ClienteDAO();
 		
 		Cliente cli = new Cliente();
@@ -37,18 +51,41 @@ public class ClienteDaoTest {
 	}
 	
 	@Test
-	public void testRemoveCliente() {
+	public void test2UpdateCliente() {
+		ClienteDAO dao = new ClienteDAO();
+		List<Cliente> cliente;
+		try {
+			cliente = dao.selectByDescricao("paulo");
+			
+			cliente.get(0).setSobreNome("Barbosa Carreira");
+			dao.updateById(cliente.get(0));
+			
+			Cliente cli = dao.findById(cliente.get(0).getId());
+			
+			Assert.assertEquals(cli.getSobreNome(), "Barbosa Carreira");
+		} catch (SQLException e) {
+			fail(e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void test3RemoveCliente() {
 		ClienteDAO dao = new ClienteDAO();
 		
 		try {
-			dao.delete(100);
+			List<Cliente> cliente = dao.selectByDescricao("paulo");
+			dao.delete(cliente.get(0).getId());
 			
-			Cliente cli = dao.findById(100);
-			Assert.assertEquals(cli.getCpf(), null);
+			Cliente cli = dao.findById(cliente.get(0).getId());
+			Assert.assertEquals(cli, null);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 
+	
+	
 }

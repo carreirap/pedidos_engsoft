@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
+import org.junit.After;
+
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
 
 public class ClienteDAO extends GenericDao<Cliente> {
@@ -13,6 +17,17 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	private final String sqlInsert = "INSERT INTO CLIENTE (CPF, NOME, SOBRENOME) VALUES(?,?,?)";
 	private final String sqlDelete = "DELETE FROM CLIENTE WHERE ID = ?";
 	private final String sqlSelectById = "SELECT * FROM CLIENTE WHERE ID = ?";
+	private final String sqlSelectByNome = "SELECT * FROM CLIENTE WHERE NOME = ?";
+	private final String sqlUpdate = "UPDATE CLIENTE SET CPF=?, NOME=?, SOBRENOME=? WHERE ID = ?"; 
+	
+	
+//	@PostConstruct
+//	public void createDB() { 
+//		getConnection();
+//		
+//		connection.desconectar();
+//	}
+
 	
 	@Override
 	public void insert(Cliente object) throws SQLException {
@@ -56,7 +71,7 @@ public class ClienteDAO extends GenericDao<Cliente> {
 		
 		List<Cliente> lista = new ArrayList<Cliente>();
 		ResultSet rs = null;
-		try (PreparedStatement stmt = connection.prepareSQL(sqlSelectById); ) {
+		try (PreparedStatement stmt = connection.prepareSQL(sqlSelectByNome); ) {
 			stmt.setString(1, descricao);
 				
 			rs = stmt.executeQuery();
@@ -86,7 +101,20 @@ public class ClienteDAO extends GenericDao<Cliente> {
 
 	@Override
 	void updateById(Cliente object) throws SQLException {
-		// TODO Auto-generated method stub
+		
+		try (PreparedStatement stmt = connection.prepareSQL(sqlUpdate); ) {
+			stmt.setString(1, object.getCpf());
+			stmt.setString(2, object.getNome());
+			stmt.setString(3, object.getSobreNome());
+			stmt.setInt(4, object.getId());
+				
+			stmt.executeUpdate();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connection.desconectar();
+		}
 		
 	}
 
@@ -95,7 +123,7 @@ public class ClienteDAO extends GenericDao<Cliente> {
 		
 		getConnection();
 		
-		Cliente cli = new Cliente();
+		Cliente cli = null;
 		ResultSet rs = null;
 		try (PreparedStatement stmt = connection.prepareSQL(sqlSelectById); ) {
 			stmt.setInt(1, id);
@@ -113,6 +141,25 @@ public class ClienteDAO extends GenericDao<Cliente> {
 			connection.desconectar();
 		}
 		return cli;
+	}
+	
+	
+	public void cleanUp() throws Exception {
+		System.out.println("delete everything");
+		getConnection();
+		//connection.createDB();
+		try (PreparedStatement stmt = connection.prepareSQL("DELETE FROM CLIENTE"); ) {
+			
+				
+			int i = stmt.executeUpdate();
+			
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connection.desconectar();
+		}
+		
 	}
 	
 
