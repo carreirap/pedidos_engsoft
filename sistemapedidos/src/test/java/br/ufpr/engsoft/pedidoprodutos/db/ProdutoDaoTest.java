@@ -8,11 +8,9 @@ import java.util.List;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.testng.Assert;
-
-import com.sun.corba.se.impl.ior.GenericTaggedComponent;
 
 import br.ufpr.engsoft.pedidoprodutos.Produto;
+import junit.framework.Assert;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ProdutoDaoTest {

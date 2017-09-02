@@ -32,7 +32,6 @@ public class ConnectionDB {
 			Class.forName("org.hsqldb.jdbcDriver");
 
 			conn = DriverManager.getConnection("jdbc:hsqldb:file:mydbpedidos", "sa", "");
-
 			System.out.println(conn.isClosed());
 			
 		} catch (SQLException e) {

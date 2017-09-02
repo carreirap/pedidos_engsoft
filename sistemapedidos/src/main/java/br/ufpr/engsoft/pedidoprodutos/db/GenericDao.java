@@ -15,6 +15,8 @@ public abstract class GenericDao<T> {
 	
 	abstract T findById(int id) throws SQLException;;
 	
+	abstract List<T> findAll() throws SQLException;;
+	
 	abstract void updateById(T object) throws SQLException;
 		
 	void getConnection() {

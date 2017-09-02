@@ -1,5 +1,9 @@
 package br.ufpr.engsoft.pedidoprodutos;
 
+import java.sql.SQLException;
+
+import br.ufpr.engsoft.pedidoprodutos.db.ClienteDAO;
+
 public class Cliente {
 	
 	private int id;
@@ -9,11 +13,18 @@ public class Cliente {
 	private String sobreNome;
 	
 	private String cpf;
+	
+	public void salvarCliente() throws SQLException {
+		ClienteDAO dao = new ClienteDAO();
+		dao.insert(this);
+	}
+	
+	
 
 	public int getId() {
 		return id;
 	}
-
+	
 	public void setId(int id) {
 		this.id = id;
 	}

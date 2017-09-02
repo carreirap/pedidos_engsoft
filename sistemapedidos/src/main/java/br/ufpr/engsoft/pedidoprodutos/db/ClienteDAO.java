@@ -6,10 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
-import org.junit.After;
-
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
 
 public class ClienteDAO extends GenericDao<Cliente> {
@@ -19,6 +15,7 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	private final String sqlSelectById = "SELECT * FROM CLIENTE WHERE ID = ?";
 	private final String sqlSelectByNome = "SELECT * FROM CLIENTE WHERE NOME = ?";
 	private final String sqlUpdate = "UPDATE CLIENTE SET CPF=?, NOME=?, SOBRENOME=? WHERE ID = ?"; 
+	private final String sqlAll = "SELECT * FROM CLIENTE";
 	
 	
 //	@PostConstruct
@@ -160,6 +157,26 @@ public class ClienteDAO extends GenericDao<Cliente> {
 			connection.desconectar();
 		}
 		
+	}
+
+	@Override
+	public List<Cliente> findAll() throws SQLException {
+		getConnection();
+		
+		List<Cliente> lista = new ArrayList<Cliente>();
+		ResultSet rs = null;
+		try (PreparedStatement stmt = connection.prepareSQL(sqlAll); ) {
+				
+			rs = stmt.executeQuery();
+			
+			lista = loadCliente(rs);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (rs != null)  rs.close();
+			connection.desconectar();
+		}
+		return lista;
 	}
 	
 

@@ -16,7 +16,7 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	private final String sqlSelectById = "SELECT * FROM PRODUTO WHERE ID = ?";
 	private final String sqlSelectByDescricao = "SELECT * FROM PRODUTO WHERE DESCRICAO = ?";
 	private final String sqlUpdate = "UPDATE PRODUTO SET DESCRICAO = ? WHERE ID = ?";
-	
+	private final String sqlAll = "SELECT * FROM PRODUTO";
 
 	@Override
 	void insert(Produto object) throws SQLException {
@@ -140,6 +140,26 @@ public class ProdutoDAO extends GenericDao<Produto> {
 			connection.desconectar();
 		}
 		
+	}
+	
+	@Override
+	public List<Produto> findAll() throws SQLException {
+		getConnection();
+		
+		List<Produto> lista = new ArrayList<Produto>();
+		ResultSet rs = null;
+		try (PreparedStatement stmt = connection.prepareSQL(sqlAll); ) {
+				
+			rs = stmt.executeQuery();
+			
+			lista = loadProduto(rs);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (rs != null)  rs.close();
+			connection.desconectar();
+		}
+		return lista;
 	}
 	
 }

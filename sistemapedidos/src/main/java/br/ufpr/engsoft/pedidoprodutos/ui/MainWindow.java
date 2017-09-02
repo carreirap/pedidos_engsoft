@@ -2,6 +2,7 @@ package br.ufpr.engsoft.pedidoprodutos.ui;
 
 import java.awt.CardLayout;
 import java.awt.EventQueue;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,13 +11,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import br.ufpr.engsoft.pedidoprodutos.Cliente;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ClienteTableModel;
-import javax.swing.JScrollPane;
 
 public class MainWindow extends JFrame {
 
@@ -83,9 +84,9 @@ public class MainWindow extends JFrame {
 		contentPane.setLayout(new CardLayout(0, 0));
 						
 			
-		createPanelProduto();
+		//createPanelProduto();
 		
-		//createClientePanel();
+		createClientePanel();
 		
 	}
 	
@@ -162,15 +163,32 @@ public class MainWindow extends JFrame {
 		panelCliente.add(inputSobreNome);
 		inputSobreNome.setColumns(10);
 		
+		
+		ClienteTableModel model = new ClienteTableModel();
+		
+		
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.setBounds(204, 158, 97, 25);
+		btnSalvar.addActionListener(
+				e -> {
+					try {
+						Cliente cli = new Cliente();
+						cli.setCpf(inputCPF.getText());
+						cli.setNome(inputNomecliente.getText());
+						cli.setSobreNome(inputSobreNome.getText());
+						cli.salvarCliente();
+						model.listarClientes();
+					} catch (SQLException ex) {
+						//message error when saving cliente
+					}
+				});
 		panelCliente.add(btnSalvar);
 		
 		JButton btnExcluir = new JButton("Excluir");
 		btnExcluir.setBounds(316, 158, 97, 25);
 		panelCliente.add(btnExcluir);
 		
-		ClienteTableModel model = new ClienteTableModel();
+		
 		
 		JTable table = new JTable(model);
 		table.setColumnSelectionAllowed(true);

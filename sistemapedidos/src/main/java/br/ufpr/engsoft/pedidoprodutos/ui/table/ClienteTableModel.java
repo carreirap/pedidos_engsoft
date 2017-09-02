@@ -1,11 +1,12 @@
 package br.ufpr.engsoft.pedidoprodutos.ui.table;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
+import br.ufpr.engsoft.pedidoprodutos.db.ClienteDAO;
 
 public class ClienteTableModel extends AbstractTableModel {
 	
@@ -19,12 +20,22 @@ public class ClienteTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -6151707643944765141L;
 	
 	public ClienteTableModel() {
-		this.data = new ArrayList<Cliente>();
+		/*this.data = new ArrayList<Cliente>();
 		Cliente cli = new Cliente();
 		cli.setCpf("789451264646");
 		cli.setNome("Paulo");
 		cli.setSobreNome("Carreira");
-		this.data.add(cli);
+		this.data.add(cli);*/
+	}
+	
+	public void listarClientes() {
+		ClienteDAO dao = new ClienteDAO();
+		try {
+			this.data.addAll(dao.findAll());
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}		
 	}
 	
 	@Override
@@ -39,7 +50,11 @@ public class ClienteTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return this.data.size();
+		try {
+			return this.data.size();
+		} catch(Exception e) {
+			return 0;
+		}
 	}
 
 	@Override
