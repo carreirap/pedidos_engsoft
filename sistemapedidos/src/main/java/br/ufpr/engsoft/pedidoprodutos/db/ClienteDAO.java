@@ -94,7 +94,7 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	}
 
 	@Override
-	void updateById(Cliente object) throws SQLException {
+	public void updateById(Cliente object) throws SQLException {
 		getConnection();
 		try (PreparedStatement stmt = connection.prepareSQL(sqlUpdate); ) {
 			stmt.setString(1, object.getCpf());
@@ -141,7 +141,7 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	public void cleanUp() throws Exception {
 		System.out.println("delete everything");
 		getConnection();
-		//connection.createDB();
+		connection.createDB();
 		try (PreparedStatement stmt = connection.prepareSQL("DELETE FROM CLIENTE"); ) {
 			
 				

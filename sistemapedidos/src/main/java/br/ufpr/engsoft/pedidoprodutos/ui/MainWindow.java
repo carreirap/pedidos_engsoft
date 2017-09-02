@@ -1,10 +1,12 @@
 package br.ufpr.engsoft.pedidoprodutos.ui;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -15,16 +17,22 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
+import br.ufpr.engsoft.pedidoprodutos.Produto;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ClienteTableModel;
+import br.ufpr.engsoft.pedidoprodutos.ui.table.ProdutoTableModel;
 
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelCliente;
 	private JPanel panelProduto;
+	private JPanel panelPedido;
 	private JTextField textField;
+	private JTextField textField_1;
 	
 	
 //	private JTable table;
@@ -82,12 +90,14 @@ public class MainWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
-						
 			
 		//createPanelProduto();
 		
-		createClientePanel();
+		//createClientePanel();
+	
+		createPanelPedido();
 		
+		//createPanelBuscaProduto();
 	}
 	
 	private void removePanels() {
@@ -97,7 +107,88 @@ public class MainWindow extends JFrame {
 		if (panelProduto != null) { 
 			contentPane.remove(panelProduto); 
 		}
+		if (panelPedido != null) {
+			contentPane.remove(panelProduto);
+		}
 		
+	}
+	
+	private void createPanelPedido() {
+		panelPedido = new JPanel();
+		contentPane.add(panelPedido, "name_panelPedio");
+		panelPedido.setLayout(null);
+		
+		JLabel lblCpf_1 = new JLabel("CPF:");
+		lblCpf_1.setBounds(54, 33, 27, 16);
+		panelPedido.add(lblCpf_1);
+		
+		textField = new JTextField();
+		textField.setBounds(93, 27, 116, 22);
+		panelPedido.add(textField);
+		textField.setColumns(11);
+		
+		JLabel lblIdProduto = new JLabel("Id Produto:");
+		lblIdProduto.setBounds(17, 62, 64, 16);
+		panelPedido.add(lblIdProduto);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(93, 56, 116, 22);
+		panelPedido.add(textField_1);
+		textField_1.setColumns(11);
+		
+		JButton button = new JButton("Buscar Produto");
+		button.addActionListener(e -> { 
+			
+			JPanel panelBuscaProduto = createPanelBuscaProduto();
+			
+			final JDialog frame = new JDialog((JFrame)panelPedido.getRootPane().getParent(), "Buscar Produtos", true);
+			frame.setLayout(null);
+			
+			frame.setContentPane(panelBuscaProduto);
+			frame.setBounds(110, 120, 619, 349);
+			frame.setPreferredSize(new Dimension(619, 349));
+			frame.pack();
+			frame.setVisible(true);
+			frame.revalidate();
+			frame.repaint();
+			
+			panelBuscaProduto.repaint();
+			
+		});
+		button.setBounds(352, 56, 127, 24);
+		panelPedido.add(button);
+	}
+	
+	private JPanel createPanelBuscaProduto() {
+		JPanel panelBuscaProduto = new JPanel();
+		//contentPane.add(panelBuscaProduto, "buscaProduto");
+		panelBuscaProduto.setLayout(null);
+		
+		ProdutoTableModel model = new ProdutoTableModel();
+		model.listarProdutos();
+		
+		JTable table = new JTable(model);
+		table.setColumnSelectionAllowed(true);
+		table.setBounds(104, 284, 1, 1);
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+//	        	inputId.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+//	        	inputDescrProduto.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+//	        	lblId.setVisible(true);
+//	        	inputId.setVisible(true);
+	        }
+	    });
+		
+		JScrollPane scrollPane2 = new JScrollPane(table);
+		scrollPane2.setBounds(12, 49, 581, 221);
+		panelBuscaProduto.add(scrollPane2);
+		
+		JLabel lblListagemDeProdutos = new JLabel("Listagem de Produtos");
+		lblListagemDeProdutos.setBounds(13, 24, 146, 16);
+		panelBuscaProduto.add(lblListagemDeProdutos);
+		
+		return panelBuscaProduto;
 	}
 
 	private void createPanelProduto() {
@@ -107,23 +198,98 @@ public class MainWindow extends JFrame {
 		panelProduto.setLayout(null);
 		contentPane.add(panelProduto);
 		
-		JLabel lblNewLabel = new JLabel("ID:");
-		lblNewLabel.setBounds(47, 52, 41, 14);
-		panelProduto.add(lblNewLabel);
+		JLabel lblId = new JLabel("ID:");
+		lblId.setBounds(64, 52, 28, 14);
+		lblId.setVisible(false);
+		panelProduto.add(lblId);
 		
-		JTextField inputId = new JTextField();
-		inputId.setBounds(111, 49, 86, 20);
+		JLabel inputId = new JLabel();
+		inputId.setBounds(100, 46, 86, 20);
+		inputId.setVisible(false);
 		panelProduto.add(inputId);
-		inputId.setColumns(10);
+		//inputId.setColumns(10);
 		
 		JTextField inputDescrProduto = new JTextField();
-		inputDescrProduto.setBounds(110, 102, 116, 22);
+		inputDescrProduto.setBounds(100, 79, 195, 22);
 		panelProduto.add(inputDescrProduto);
-		inputDescrProduto.setColumns(10);
+		inputDescrProduto.setColumns(45);
 		
 		JLabel lblDescricao = new JLabel("Descrição:");
-		lblDescricao.setBounds(17, 105, 69, 16);
+		lblDescricao.setBounds(22, 85, 69, 16);
 		panelProduto.add(lblDescricao);
+		
+		ProdutoTableModel model = new ProdutoTableModel();
+		model.listarProdutos();
+		
+		JTable table = new JTable(model);
+		table.setColumnSelectionAllowed(true);
+		table.setBounds(104, 284, 1, 1);
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+	        	inputId.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+	        	inputDescrProduto.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+	        	lblId.setVisible(true);
+	        	inputId.setVisible(true);
+	        }
+	    });
+		
+		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.setBounds(204, 158, 97, 25);
+		btnSalvar.addActionListener(
+				e -> {
+					try {
+						Produto pro = new Produto();
+						pro.setDescricao(inputDescrProduto.getText().trim());
+						
+						if (!inputId.getText().equals("")) {
+							pro.setId(Integer.parseInt(inputId.getText().trim()));
+							pro.alterar();
+						} else {
+							pro.salvar();
+						}
+						model.listarProdutos();
+						
+						inputId.setText("");
+						inputId.setVisible(false);
+						lblId.setVisible(false);
+						inputDescrProduto.setText("");
+												
+						table.repaint();
+						table.revalidate();
+						
+					} catch (SQLException ex) {
+						ex.printStackTrace();
+					}
+				});
+		panelProduto.add(btnSalvar);
+		
+		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.setBounds(316, 158, 97, 25);
+		btnExcluir.addActionListener(
+				e -> {
+					try {
+						Produto prod = new Produto();
+						prod.setId(Integer.parseInt(inputId.getText()));
+						prod.deletar();
+						model.listarProdutos();
+						
+						inputId.setText("");
+						inputDescrProduto.setText("");
+						inputId.setVisible(false);
+						lblId.setVisible(false);
+						table.repaint();
+						table.revalidate();
+						
+					} catch (SQLException ex) {
+						ex.printStackTrace();
+					}
+				});
+		panelProduto.add(btnExcluir);
+				
+		JScrollPane scrollPane2 = new JScrollPane(table);
+		scrollPane2.setBounds(22, 192, 581, 146);
+		panelProduto.add(scrollPane2);
 				
 		contentPane.revalidate();
 		contentPane.repaint();
@@ -135,13 +301,13 @@ public class MainWindow extends JFrame {
 		panelCliente.setLayout(null);
 		
 		JLabel lblCpf = new JLabel("CPF:");
-		lblCpf.setBounds(53, 114, 38, 16);
+		lblCpf.setBounds(58, 114, 38, 16);
 		panelCliente.add(lblCpf);
 		
 		JTextField inputCPF = new JTextField();
 		inputCPF.setBounds(103, 111, 147, 22);
 		panelCliente.add(inputCPF);
-		inputCPF.setColumns(10);
+		inputCPF.setColumns(11);
 		
 		JLabel lblNome = new JLabel("Nome:");
 		lblNome.setBounds(53, 47, 46, 16);
@@ -150,8 +316,7 @@ public class MainWindow extends JFrame {
 		JTextField inputNomecliente = new JTextField();
 		inputNomecliente.setBounds(104, 44, 116, 22);
 		panelCliente.add(inputNomecliente);
-		inputNomecliente.setColumns(10);
-		System.out.println("XXXXXXXXXXXXxxxxxxxx");
+		inputNomecliente.setColumns(30);
 		contentPane.add(panelCliente, "name_9242687062646");
 		
 		JLabel lblSobreNome = new JLabel("Sobre Nome:");
@@ -161,8 +326,18 @@ public class MainWindow extends JFrame {
 		JTextField inputSobreNome = new JTextField();
 		inputSobreNome.setBounds(103, 76, 199, 22);
 		panelCliente.add(inputSobreNome);
-		inputSobreNome.setColumns(10);
+		inputSobreNome.setColumns(50);
 		
+		JLabel lblId = new JLabel("Id:");
+		lblId.setBounds(74, 18, 20, 16);
+		lblId.setVisible(false);
+		panelCliente.add(lblId);
+		
+		
+		JLabel lblIdCliente = new JLabel("");
+		lblIdCliente.setBounds(106, 18, 56, 16);
+		lblIdCliente.setVisible(false);
+		panelCliente.add(lblIdCliente);
 		
 		ClienteTableModel model = new ClienteTableModel();
 		model.listarClientes();
@@ -171,18 +346,40 @@ public class MainWindow extends JFrame {
 		table.setColumnSelectionAllowed(true);
 		table.setBounds(104, 284, 1, 1);
 		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+	            inputNomecliente.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+	            inputSobreNome.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
+				inputCPF.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
+				lblIdCliente.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+				lblIdCliente.setVisible(true);
+				lblId.setVisible(true);
+	        }
+	    });
+		
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.setBounds(204, 158, 97, 25);
 		btnSalvar.addActionListener(
 				e -> {
 					try {
 						Cliente cli = new Cliente();
-						cli.setCpf(inputCPF.getText());
-						cli.setNome(inputNomecliente.getText());
-						cli.setSobreNome(inputSobreNome.getText());
-						cli.salvarCliente();
+						cli.setCpf(inputCPF.getText().trim());
+						cli.setNome(inputNomecliente.getText().trim());
+						cli.setSobreNome(inputSobreNome.getText().trim());
+						
+						if (!lblIdCliente.getText().equals("")) {
+							cli.setId(Integer.parseInt(lblIdCliente.getText().trim()));
+							cli.alterar();
+						} else {
+							cli.salvarCliente();
+						}
 						model.listarClientes();
 						
+						inputCPF.setText("");
+						inputNomecliente.setText("");
+						inputSobreNome.setText("");
+						lblIdCliente.setText("");
+												
 						table.repaint();
 						table.revalidate();
 						
@@ -194,11 +391,28 @@ public class MainWindow extends JFrame {
 		
 		JButton btnExcluir = new JButton("Excluir");
 		btnExcluir.setBounds(316, 158, 97, 25);
+		btnExcluir.addActionListener(
+				e -> {
+					try {
+						Cliente cli = new Cliente();
+						cli.setId(Integer.parseInt(lblIdCliente.getText()));
+						cli.deletarCliente();
+						model.listarClientes();
+						
+						inputCPF.setText("");
+						inputNomecliente.setText("");
+						inputSobreNome.setText("");
+						lblIdCliente.setText("");
+						lblIdCliente.setVisible(false);
+						lblId.setVisible(false);
+						table.repaint();
+						table.revalidate();
+						
+					} catch (SQLException ex) {
+						ex.printStackTrace();
+					}
+				});
 		panelCliente.add(btnExcluir);
-		
-		
-		
-		
 				
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setBounds(22, 192, 581, 146);

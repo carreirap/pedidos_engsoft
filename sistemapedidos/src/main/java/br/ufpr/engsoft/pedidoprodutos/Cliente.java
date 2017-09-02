@@ -19,6 +19,16 @@ public class Cliente {
 		dao.insert(this);
 	}
 	
+	public void deletarCliente() throws SQLException {
+		ClienteDAO dao = new ClienteDAO();
+		dao.delete(id);
+	}
+	
+	public void alterar() throws SQLException {
+		ClienteDAO dao = new ClienteDAO();
+		dao.updateById(this);
+	}
+	
 	
 
 	public int getId() {

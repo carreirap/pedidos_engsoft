@@ -1,10 +1,29 @@
 package br.ufpr.engsoft.pedidoprodutos;
 
+import java.sql.SQLException;
+
+import br.ufpr.engsoft.pedidoprodutos.db.ProdutoDAO;
+
 public class Produto {
 	
 	private int id;
 	
 	private String descricao;
+	
+	public void salvar() throws SQLException {
+		ProdutoDAO dao = new ProdutoDAO();
+		dao.insert(this);
+	}
+	
+	public void alterar() throws SQLException {
+		ProdutoDAO dao = new ProdutoDAO();
+		dao.updateById(this);
+	}
+	
+	public void deletar() throws SQLException {
+		ProdutoDAO dao = new ProdutoDAO();
+		dao.delete(id);
+	}
 
 	public int getId() {
 		return id;

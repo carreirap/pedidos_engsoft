@@ -19,7 +19,7 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	private final String sqlAll = "SELECT * FROM PRODUTO";
 
 	@Override
-	void insert(Produto object) throws SQLException {
+	public void insert(Produto object) throws SQLException {
 
 		getConnection();
 		
@@ -36,7 +36,7 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	}
 
 	@Override
-	void delete(int id) throws SQLException {
+	public void delete(int id) throws SQLException {
 		getConnection();
 		
 		try (PreparedStatement stmt = connection.prepareSQL(sqlDelete)) {
@@ -52,7 +52,7 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	}
 
 	@Override
-	List<Produto> selectByDescricao(String descricao) throws SQLException {
+	public List<Produto> selectByDescricao(String descricao) throws SQLException {
 		getConnection();
 		
 		List<Produto> lista = new ArrayList<Produto>();
@@ -75,16 +75,18 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	private List<Produto> loadProduto(ResultSet rs) throws SQLException {
 		List<Produto> lista = new ArrayList<Produto>();
 		if (rs.next()) {
-			Produto prod = new Produto();
-			prod.setId(rs.getInt("id"));
-			prod.setDescricao(rs.getString("descricao"));
-			lista.add(prod);		
+			do {
+				Produto prod = new Produto();
+				prod.setId(rs.getInt("id"));
+				prod.setDescricao(rs.getString("descricao"));
+				lista.add(prod);
+			} while(rs.next());
 		}
 		return lista;
 	}
 
 	@Override
-	Produto findById(int id) throws SQLException {
+	public Produto findById(int id) throws SQLException {
 		getConnection();
 
 		Produto prod = null;
@@ -109,7 +111,7 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	}
 
 	@Override
-	void updateById(Produto object) throws SQLException {
+	public void updateById(Produto object) throws SQLException {
 		getConnection();
 		
 		try (PreparedStatement stmt = connection.prepareSQL(sqlUpdate); ) {
