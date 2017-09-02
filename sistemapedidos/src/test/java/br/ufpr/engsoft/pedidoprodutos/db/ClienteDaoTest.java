@@ -10,17 +10,12 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
-
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ClienteDaoTest {
 
-//	@Test
-//	public void test() {
-//		fail("Not yet implemented");
-//	}
+
 	@Test
 	public void test0clean() {
 		ClienteDAO dao = new ClienteDAO();
@@ -50,6 +45,7 @@ public class ClienteDaoTest {
 			fail(e.getMessage());
 		}
 	}
+	
 	
 	@Test
 	public void test2UpdateCliente() {

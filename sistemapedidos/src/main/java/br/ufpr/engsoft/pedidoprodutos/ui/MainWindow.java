@@ -165,7 +165,11 @@ public class MainWindow extends JFrame {
 		
 		
 		ClienteTableModel model = new ClienteTableModel();
+		model.listarClientes();
 		
+		JTable table = new JTable(model);
+		table.setColumnSelectionAllowed(true);
+		table.setBounds(104, 284, 1, 1);
 		
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.setBounds(204, 158, 97, 25);
@@ -178,8 +182,12 @@ public class MainWindow extends JFrame {
 						cli.setSobreNome(inputSobreNome.getText());
 						cli.salvarCliente();
 						model.listarClientes();
+						
+						table.repaint();
+						table.revalidate();
+						
 					} catch (SQLException ex) {
-						//message error when saving cliente
+						ex.printStackTrace();
 					}
 				});
 		panelCliente.add(btnSalvar);
@@ -190,9 +198,7 @@ public class MainWindow extends JFrame {
 		
 		
 		
-		JTable table = new JTable(model);
-		table.setColumnSelectionAllowed(true);
-		table.setBounds(104, 284, 1, 1);
+		
 				
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setBounds(22, 192, 581, 146);

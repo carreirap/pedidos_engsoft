@@ -31,9 +31,9 @@ public class ConnectionDB {
 		try {
 			Class.forName("org.hsqldb.jdbcDriver");
 
-			conn = DriverManager.getConnection("jdbc:hsqldb:file:mydbpedidos", "sa", "");
-			System.out.println(conn.isClosed());
-			
+			conn = DriverManager.getConnection("jdbc:hsqldb:file:../mydbpedidos;hsqldb.write_delay=false;shutdown‌​=false", "sa", "");
+			System.out.println("Connected "+ !conn.isClosed());
+			conn.setAutoCommit(true);
 		} catch (SQLException e) {
 			throw new RuntimeException("Unable to load database", e);
 		} catch (ClassNotFoundException e) {
@@ -43,6 +43,7 @@ public class ConnectionDB {
 	
 	public void desconectar() {
 		try {
+			//org.hsqldb.DatabaseManager.closeDatabases(0);
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -54,6 +55,9 @@ public class ConnectionDB {
 		return conn.prepareStatement(sql);
 	}
 	
+	public void commit() throws SQLException {
+		conn.commit();
+	}
 	
 	
 	public void createDB() {

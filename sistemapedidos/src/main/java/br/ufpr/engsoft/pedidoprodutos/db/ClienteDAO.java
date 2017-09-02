@@ -17,27 +17,22 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	private final String sqlUpdate = "UPDATE CLIENTE SET CPF=?, NOME=?, SOBRENOME=? WHERE ID = ?"; 
 	private final String sqlAll = "SELECT * FROM CLIENTE";
 	
-	
-//	@PostConstruct
-//	public void createDB() { 
-//		getConnection();
-//		
-//		connection.desconectar();
-//	}
-
-	
+		
 	@Override
 	public void insert(Cliente object) throws SQLException {
 		
 		getConnection();
-		
+		System.out.println(object);
 		try (PreparedStatement stmt = connection.prepareSQL(sqlInsert)) {
 			stmt.setString(1, object.getCpf());
 			stmt.setString(2, object.getNome());
 			stmt.setString(3, object.getSobreNome());
 			
-			stmt.executeUpdate();
+			System.out.println(stmt.executeUpdate());
+			
+			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			connection.desconectar();
@@ -86,19 +81,21 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	private List<Cliente> loadCliente(ResultSet rs) throws SQLException {
 		List<Cliente> lista = new ArrayList<Cliente>();
 		if (rs.next()) {
+			do {
 			Cliente cli = new Cliente();
 			cli.setId(rs.getInt("id"));
 			cli.setNome(rs.getString("nome"));
 			cli.setSobreNome(rs.getString("sobreNome"));
 			cli.setCpf(rs.getString("cpf"));
-			lista.add(cli);		
+			lista.add(cli);
+			} while (rs.next());
 		}
 		return lista;
 	}
 
 	@Override
 	void updateById(Cliente object) throws SQLException {
-		
+		getConnection();
 		try (PreparedStatement stmt = connection.prepareSQL(sqlUpdate); ) {
 			stmt.setString(1, object.getCpf());
 			stmt.setString(2, object.getNome());
