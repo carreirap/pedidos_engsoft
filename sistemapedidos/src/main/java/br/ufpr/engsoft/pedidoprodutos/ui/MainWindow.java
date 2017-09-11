@@ -30,9 +30,8 @@ public class MainWindow extends JFrame {
 	private JPanel contentPane;
 	private JPanel panelCliente;
 	private JPanel panelProduto;
-	private JPanel panelPedido;
-	private JTextField textField;
-	private JTextField textField_1;
+	private PanelPedido panelPedido;
+	
 	
 	
 //	private JTable table;
@@ -114,81 +113,10 @@ public class MainWindow extends JFrame {
 	}
 	
 	private void createPanelPedido() {
-		panelPedido = new JPanel();
+		panelPedido = new PanelPedido();
 		contentPane.add(panelPedido, "name_panelPedio");
-		panelPedido.setLayout(null);
 		
-		JLabel lblCpf_1 = new JLabel("CPF:");
-		lblCpf_1.setBounds(54, 33, 27, 16);
-		panelPedido.add(lblCpf_1);
 		
-		textField = new JTextField();
-		textField.setBounds(93, 27, 116, 22);
-		panelPedido.add(textField);
-		textField.setColumns(11);
-		
-		JLabel lblIdProduto = new JLabel("Id Produto:");
-		lblIdProduto.setBounds(17, 62, 64, 16);
-		panelPedido.add(lblIdProduto);
-		
-		textField_1 = new JTextField();
-		textField_1.setBounds(93, 56, 116, 22);
-		panelPedido.add(textField_1);
-		textField_1.setColumns(11);
-		
-		JButton button = new JButton("Buscar Produto");
-		button.addActionListener(e -> { 
-			
-			JPanel panelBuscaProduto = createPanelBuscaProduto();
-			
-			final JDialog frame = new JDialog((JFrame)panelPedido.getRootPane().getParent(), "Buscar Produtos", true);
-			frame.setLayout(null);
-			
-			frame.setContentPane(panelBuscaProduto);
-			frame.setBounds(110, 120, 619, 349);
-			frame.setPreferredSize(new Dimension(619, 349));
-			frame.pack();
-			frame.setVisible(true);
-			frame.revalidate();
-			frame.repaint();
-			
-			panelBuscaProduto.repaint();
-			
-		});
-		button.setBounds(352, 56, 127, 24);
-		panelPedido.add(button);
-	}
-	
-	private JPanel createPanelBuscaProduto() {
-		JPanel panelBuscaProduto = new JPanel();
-		//contentPane.add(panelBuscaProduto, "buscaProduto");
-		panelBuscaProduto.setLayout(null);
-		
-		ProdutoTableModel model = new ProdutoTableModel();
-		model.listarProdutos();
-		
-		JTable table = new JTable(model);
-		table.setColumnSelectionAllowed(true);
-		table.setBounds(104, 284, 1, 1);
-		
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-	        public void valueChanged(ListSelectionEvent event) {
-//	        	inputId.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
-//	        	inputDescrProduto.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
-//	        	lblId.setVisible(true);
-//	        	inputId.setVisible(true);
-	        }
-	    });
-		
-		JScrollPane scrollPane2 = new JScrollPane(table);
-		scrollPane2.setBounds(12, 49, 581, 221);
-		panelBuscaProduto.add(scrollPane2);
-		
-		JLabel lblListagemDeProdutos = new JLabel("Listagem de Produtos");
-		lblListagemDeProdutos.setBounds(13, 24, 146, 16);
-		panelBuscaProduto.add(lblListagemDeProdutos);
-		
-		return panelBuscaProduto;
 	}
 
 	private void createPanelProduto() {
