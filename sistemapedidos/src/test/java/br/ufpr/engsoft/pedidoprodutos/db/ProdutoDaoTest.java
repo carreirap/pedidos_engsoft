@@ -81,4 +81,21 @@ public class ProdutoDaoTest {
 		}
 	}
 
+	
+	@Test
+	public void test4InsertProduto2() {
+		ProdutoDAO dao = new ProdutoDAO();
+		
+		Produto pro = new Produto();
+		pro.setDescricao("Manga Manteiga");
+		try {
+			dao.insert(pro);
+			
+			List<Produto> Produto = dao.selectByDescricao("Manga Manteiga");
+			Assert.assertEquals("Manga Manteiga", Produto.get(0).getDescricao());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }

@@ -3,11 +3,13 @@ package br.ufpr.engsoft.pedidoprodutos.db;
 import java.sql.SQLException;
 import java.util.List;
 
+import br.ufpr.engsoft.pedidoprodutos.MyException;
+
 public abstract class GenericDao<T> {
 	
 	ConnectionDB connection;
 	
-	abstract void insert(T object) throws SQLException;
+	abstract void insert(T object) throws SQLException, MyException;
 	
 	abstract void delete(int id) throws SQLException;
 	

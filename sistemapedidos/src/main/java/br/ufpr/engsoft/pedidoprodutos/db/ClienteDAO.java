@@ -141,13 +141,9 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	public void cleanUp() throws Exception {
 		System.out.println("delete everything");
 		getConnection();
-		connection.createDB();
+		//connection.createDB();
 		try (PreparedStatement stmt = connection.prepareSQL("DELETE FROM CLIENTE"); ) {
-			
-				
 			int i = stmt.executeUpdate();
-			
-			
 		} catch (Exception e) {
 			throw e;
 		} finally {
