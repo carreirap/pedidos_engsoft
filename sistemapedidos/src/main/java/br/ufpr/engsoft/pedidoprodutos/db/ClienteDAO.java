@@ -13,7 +13,7 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	private final String sqlInsert = "INSERT INTO CLIENTE (CPF, NOME, SOBRENOME) VALUES(?,?,?)";
 	private final String sqlDelete = "DELETE FROM CLIENTE WHERE ID = ?";
 	private final String sqlSelectById = "SELECT * FROM CLIENTE WHERE ID = ?";
-	private final String sqlSelectByNome = "SELECT * FROM CLIENTE WHERE NOME = ?";
+	private final String sqlSelectByAttribute = "SELECT * FROM CLIENTE WHERE %s = ?";
 	private final String sqlUpdate = "UPDATE CLIENTE SET CPF=?, NOME=?, SOBRENOME=? WHERE ID = ?"; 
 	private final String sqlAll = "SELECT * FROM CLIENTE";
 	
@@ -58,13 +58,14 @@ public class ClienteDAO extends GenericDao<Cliente> {
 	}
 
 	@Override
-	public List<Cliente> selectByDescricao(String descricao) throws SQLException {
+	public	List<Cliente> selectByAtributo(String field, String value) throws SQLException {
 		getConnection();
 		
 		List<Cliente> lista = new ArrayList<Cliente>();
 		ResultSet rs = null;
-		try (PreparedStatement stmt = connection.prepareSQL(sqlSelectByNome); ) {
-			stmt.setString(1, descricao);
+		System.out.println(String.format(sqlSelectByAttribute, field));
+		try (PreparedStatement stmt = connection.prepareSQL(String.format(sqlSelectByAttribute, field))) {
+			stmt.setString(1, value);
 				
 			rs = stmt.executeQuery();
 			
@@ -171,6 +172,5 @@ public class ClienteDAO extends GenericDao<Cliente> {
 		}
 		return lista;
 	}
-	
 
 }

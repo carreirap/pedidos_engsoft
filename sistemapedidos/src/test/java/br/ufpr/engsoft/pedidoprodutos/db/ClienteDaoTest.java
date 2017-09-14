@@ -38,7 +38,7 @@ public class ClienteDaoTest {
 		try {
 			dao.insert(cli);
 			
-			List<Cliente> cliente = dao.selectByDescricao("paulo");
+			List<Cliente> cliente = dao.selectByAtributo("nome","paulo");
 			Assert.assertEquals("11111111111", cliente.get(0).getCpf());
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -52,7 +52,7 @@ public class ClienteDaoTest {
 		ClienteDAO dao = new ClienteDAO();
 		List<Cliente> cliente;
 		try {
-			cliente = dao.selectByDescricao("paulo");
+			cliente = dao.selectByAtributo("nome","paulo");
 			
 			cliente.get(0).setSobreNome("Barbosa Carreira");
 			dao.updateById(cliente.get(0));
@@ -72,7 +72,7 @@ public class ClienteDaoTest {
 		ClienteDAO dao = new ClienteDAO();
 		
 		try {
-			List<Cliente> cliente = dao.selectByDescricao("paulo");
+			List<Cliente> cliente = dao.selectByAtributo("nome","paulo");
 			dao.delete(cliente.get(0).getId());
 			
 			Cliente cli = dao.findById(cliente.get(0).getId());
@@ -94,7 +94,7 @@ public class ClienteDaoTest {
 		try {
 			dao.insert(cli);
 			
-			List<Cliente> cliente = dao.selectByDescricao("Rosalvo");
+			List<Cliente> cliente = dao.selectByAtributo("nome","Rosalvo");
 			Assert.assertEquals("22222222222", cliente.get(0).getCpf());
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -1,6 +1,9 @@
 package br.ufpr.engsoft.pedidoprodutos.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -13,7 +16,9 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import br.ufpr.engsoft.pedidoprodutos.Cliente;
 import br.ufpr.engsoft.pedidoprodutos.ItemPedido;
+import br.ufpr.engsoft.pedidoprodutos.Pedido;
 import br.ufpr.engsoft.pedidoprodutos.Produto;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ItemPedidoModel;
 
@@ -107,7 +112,34 @@ public class PanelPedido extends JPanel {
 	    });
 		
 		JScrollPane scrollPane2 = new JScrollPane(table);
-		scrollPane2.setBounds(22, 192, 581, 146);
+		scrollPane2.setBounds(19, 152, 581, 146);
 		add(scrollPane2);
+		
+		JButton btnSalvar_1 = new JButton("Salvar");
+		btnSalvar_1.setBounds(502, 317, 97, 25);
+		add(btnSalvar_1);
+		
+		JLabel errorLabel = new JLabel("");
+		errorLabel.setForeground(Color.RED);
+		errorLabel.setBounds(54, 320, 398, 16);
+		add(errorLabel);
+		
+		btnSalvar_1.addActionListener(
+				e -> {
+					Pedido ped = new Pedido();
+					ped.setCliente(new Cliente());
+					ped.getCliente().setCpf(inputCPFCliente.getText());
+					
+					Date d = new Date();
+					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+					ped.setData(format.format(d));
+					ped.setItens(model.getData());
+					try {
+						ped.getCliente().consultarCPF();
+						ped.savePedido();
+					} catch (Exception ex) {
+						errorLabel.setText(ex.getMessage());
+					}
+				});
 	}
 }

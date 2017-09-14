@@ -1,6 +1,7 @@
 package br.ufpr.engsoft.pedidoprodutos;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import br.ufpr.engsoft.pedidoprodutos.db.ClienteDAO;
 
@@ -29,7 +30,11 @@ public class Cliente {
 		dao.updateById(this);
 	}
 	
-	
+	public void consultarCPF() throws SQLException {
+		ClienteDAO dao = new ClienteDAO();
+		List<Cliente> lst = dao.selectByAtributo("CPF", this.cpf);
+		this.id = lst.get(0).getId();
+	}
 
 	public int getId() {
 		return id;

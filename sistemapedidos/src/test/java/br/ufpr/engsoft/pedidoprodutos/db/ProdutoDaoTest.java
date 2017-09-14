@@ -36,7 +36,7 @@ public class ProdutoDaoTest {
 		try {
 			dao.insert(pro);
 			
-			List<Produto> Produto = dao.selectByDescricao("Manga Tomi");
+			List<Produto> Produto = dao.selectByAtributo("DESCRICAO","Manga Tomi");
 			Assert.assertEquals("Manga Tomi", Produto.get(0).getDescricao());
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -50,7 +50,7 @@ public class ProdutoDaoTest {
 		
 		List<Produto> produto;
 		try {
-			produto = dao.selectByDescricao("Manga Tomi");
+			produto = dao.selectByAtributo("DESCRICAO","Manga Tomi");
 			
 			produto.get(0).setDescricao("Melão");
 			dao.updateById(produto.get(0));
@@ -70,7 +70,7 @@ public class ProdutoDaoTest {
 		ProdutoDAO dao = new ProdutoDAO();
 		
 		try {
-			List<Produto> produto = dao.selectByDescricao("Melão");
+			List<Produto> produto = dao.selectByAtributo("DESCRICAO","Melão");
 			dao.delete(produto.get(0).getId());
 			
 			Produto pro = dao.findById(produto.get(0).getId());
@@ -91,7 +91,7 @@ public class ProdutoDaoTest {
 		try {
 			dao.insert(pro);
 			
-			List<Produto> Produto = dao.selectByDescricao("Manga Manteiga");
+			List<Produto> Produto = dao.selectByAtributo("DESCRICAO","Manga Manteiga");
 			Assert.assertEquals("Manga Manteiga", Produto.get(0).getDescricao());
 		} catch (SQLException e) {
 			e.printStackTrace();

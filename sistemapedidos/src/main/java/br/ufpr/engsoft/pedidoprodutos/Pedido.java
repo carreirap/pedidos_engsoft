@@ -1,6 +1,9 @@
 package br.ufpr.engsoft.pedidoprodutos;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import br.ufpr.engsoft.pedidoprodutos.db.PedidoDAO;
 
 public class Pedido {
 	
@@ -11,6 +14,11 @@ public class Pedido {
 	private Cliente cliente;
 	
 	private List<ItemPedido> itens;
+	
+	public void savePedido() throws SQLException, MyException {
+		PedidoDAO dao = new PedidoDAO();
+		dao.insert(this);
+	}
 
 	public int getId() {
 		return id;

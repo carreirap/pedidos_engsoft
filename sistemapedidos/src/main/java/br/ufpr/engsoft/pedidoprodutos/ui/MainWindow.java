@@ -1,12 +1,10 @@
 package br.ufpr.engsoft.pedidoprodutos.ui;
 
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -21,9 +19,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
+import br.ufpr.engsoft.pedidoprodutos.Pedido;
 import br.ufpr.engsoft.pedidoprodutos.Produto;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ClienteTableModel;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ProdutoTableModel;
+import java.awt.Color;
 
 public class MainWindow extends JFrame {
 
@@ -115,7 +115,6 @@ public class MainWindow extends JFrame {
 	private void createPanelPedido() {
 		panelPedido = new PanelPedido();
 		contentPane.add(panelPedido, "name_panelPedio");
-		
 		
 	}
 

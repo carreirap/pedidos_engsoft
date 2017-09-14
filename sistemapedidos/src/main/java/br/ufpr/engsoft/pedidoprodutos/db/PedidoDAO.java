@@ -18,7 +18,7 @@ public class PedidoDAO extends GenericDao<Pedido> {
 	private final String sqlAll = 	"SELECT * FROM PEDIDO";
 	
 	@Override
-	void insert(Pedido object) throws SQLException, MyException {
+	public void insert(Pedido object) throws SQLException, MyException {
 		getConnection();
 		
 		int aux = 0;
@@ -75,7 +75,7 @@ public class PedidoDAO extends GenericDao<Pedido> {
 	}
 
 	@Override
-	List<Pedido> selectByDescricao(String descricao) throws SQLException {
+	List<Pedido> selectByAtributo(String field, String value) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}

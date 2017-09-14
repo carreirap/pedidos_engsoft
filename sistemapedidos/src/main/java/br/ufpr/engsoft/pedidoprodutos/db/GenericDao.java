@@ -13,7 +13,7 @@ public abstract class GenericDao<T> {
 	
 	abstract void delete(int id) throws SQLException;
 	
-	abstract List<T> selectByDescricao(String descricao) throws SQLException;
+	abstract List<T> selectByAtributo(String field, String value) throws SQLException;
 	
 	abstract T findById(int id) throws SQLException;;
 	

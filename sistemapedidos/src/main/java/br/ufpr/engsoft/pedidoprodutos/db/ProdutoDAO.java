@@ -14,7 +14,7 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	private final String sqlInsert = "INSERT INTO PRODUTO (DESCRICAO) VALUES(?)";
 	private final String sqlDelete = "DELETE FROM PRODUTO WHERE ID = ?";
 	private final String sqlSelectById = "SELECT * FROM PRODUTO WHERE ID = ?";
-	private final String sqlSelectByDescricao = "SELECT * FROM PRODUTO WHERE DESCRICAO = ?";
+	private final String sqlSelectByAtributo = "SELECT * FROM PRODUTO WHERE %s = ?";
 	private final String sqlUpdate = "UPDATE PRODUTO SET DESCRICAO = ? WHERE ID = ?";
 	private final String sqlAll = "SELECT * FROM PRODUTO";
 
@@ -52,13 +52,14 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	}
 
 	@Override
-	public List<Produto> selectByDescricao(String descricao) throws SQLException {
+	List<Produto> selectByAtributo(String field, String value) throws SQLException {
 		getConnection();
 		
 		List<Produto> lista = new ArrayList<Produto>();
 		ResultSet rs = null;
 		try (PreparedStatement stmt = connection.prepareSQL(sqlSelectByDescricao); ) {
-			stmt.setString(1, descricao);
+			stmt.setString(1, field);
+			stmt.setString(2, value);
 				
 			rs = stmt.executeQuery();
 			

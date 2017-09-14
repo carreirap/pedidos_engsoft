@@ -62,4 +62,7 @@ public class ItemPedidoModel extends AbstractTableModel {
 		return this.data.get(linha);
 	}
 
+	public List<ItemPedido> getData() {
+		return data;
+	}
 }
