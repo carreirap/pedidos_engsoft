@@ -2,6 +2,8 @@ package br.ufpr.engsoft.pedidoprodutos.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -27,7 +30,8 @@ public class PanelPedido extends JPanel {
 	JTextField inputCodProduto;
 	JLabel lblDescProduto;
 	ItemPedidoModel model;
-	
+	JTable table;
+	JTextField inputQtd;
 	
 	public PanelPedido() {
 		
@@ -40,6 +44,24 @@ public class PanelPedido extends JPanel {
 		
 		inputCPFCliente = new JTextField();
 		inputCPFCliente.setBounds(93, 27, 116, 22);
+		inputCPFCliente.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				if (inputCPFCliente.getText().length() >= 11 ) // limit textfield to 3 characters
+					event.consume();
+				
+			}
+			
+		});
+
 		add(inputCPFCliente);
 		inputCPFCliente.setColumns(11);
 		
@@ -49,6 +71,23 @@ public class PanelPedido extends JPanel {
 		
 		inputCodProduto = new JTextField();
 		inputCodProduto.setBounds(93, 56, 116, 22);
+		inputCodProduto.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				if (inputCodProduto.getText().length() >= 11 ) // limit textfield to 3 characters
+					event.consume();
+				
+			}
+			
+		});
 		add(inputCodProduto);
 		inputCodProduto.setColumns(11);
 		
@@ -80,25 +119,59 @@ public class PanelPedido extends JPanel {
 		
 		model = new ItemPedidoModel();
 		
-		JTable table = new JTable(model);
+		table = new JTable(model);
 		table.setColumnSelectionAllowed(true);
 		table.setBounds(104, 284, 1, 1);
 		
-		JButton btnIncluir = new JButton("Incluir");
-		btnIncluir.setBounds(93, 95, 79, 25);
-		btnIncluir.addActionListener(e -> {
-			ItemPedido item = new ItemPedido();
-			item.setQuantidade(0);
-			item.setProduto(new Produto());
-			item.getProduto().setId(Integer.parseInt(inputCodProduto.getText()));
-			item.getProduto().setDescricao(lblDescProduto.getText());
-			model.setData(item);
-			table.repaint();
-			table.revalidate();
+		
+		JLabel lblQuantidade = new JLabel("Quantidade:");
+		lblQuantidade.setBounds(12, 91, 79, 16);
+		add(lblQuantidade);
+		
+		inputQtd = new JTextField();
+		inputQtd.setBounds(94, 87, 85, 22);
+		inputQtd.setColumns(11);
+		inputQtd.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				char key = event.getKeyChar();
+				boolean press = (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_DELETE || Character
+						.isDigit(key));
+				
+				if (!press || inputQtd.getText().length() >= 11 ) // limit textfield to 3 characters
+					event.consume();
+				
+			}
+			
 		});
+		add(inputQtd);
+				
+		JButton btnIncluir = new JButton("Incluir");
+		btnIncluir.setBounds(94, 122, 79, 25);
+		btnIncluir.addActionListener(e -> {
+			if (checkValues() ) {
+				ItemPedido item = new ItemPedido();
+				item.setQuantidade(Integer.parseInt(inputQtd.getText()));
+				item.setProduto(new Produto());
+				item.getProduto().setId(Integer.parseInt(inputCodProduto.getText()));
+				item.getProduto().setDescricao(lblDescProduto.getText());
+				model.setData(item);
+				inputQtd.setText("");
+				inputCodProduto.setText("");
+				lblDescProduto.setText("");
+				refreshTable();
+			}
+		});
+		
 		add(btnIncluir);
-		
-		
 		
 		
 		
@@ -135,11 +208,34 @@ public class PanelPedido extends JPanel {
 					ped.setData(format.format(d));
 					ped.setItens(model.getData());
 					try {
-						ped.getCliente().consultarCPF();
+			
 						ped.savePedido();
+						model.getData().clear();
+						errorLabel.setText("");
+						inputQtd.setText("");
+						inputCPFCliente.setText("");
+						inputCodProduto.setText("");
+						lblDescProduto.setText("");
+						refreshTable();
+						JOptionPane.showMessageDialog(null, "Pedido gravado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 					} catch (Exception ex) {
 						errorLabel.setText(ex.getMessage());
 					}
 				});
+	}
+	
+	private void refreshTable() {
+		table.repaint();
+		table.revalidate();
+	}
+	
+	private boolean checkValues() {
+		
+		if (inputCPFCliente.getText().equals("") ||
+				lblDescProduto.getText().equals("") ||
+			    inputQtd.getText().equals("") ) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -30,9 +30,12 @@ public class Cliente {
 		dao.updateById(this);
 	}
 	
-	public void consultarCPF() throws SQLException {
+	public void consultarCPF() throws SQLException, MyException {
 		ClienteDAO dao = new ClienteDAO();
 		List<Cliente> lst = dao.selectByAtributo("CPF", this.cpf);
+		if (lst.size() == 0) {
+			throw new MyException("CPF informado não cadastrado");
+		}
 		this.id = lst.get(0).getId();
 	}
 

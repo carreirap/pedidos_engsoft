@@ -9,13 +9,16 @@ import java.util.List;
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
 import br.ufpr.engsoft.pedidoprodutos.MyException;
 import br.ufpr.engsoft.pedidoprodutos.Pedido;
+import br.ufpr.engsoft.pedidoprodutos.Produto;
 
 public class PedidoDAO extends GenericDao<Pedido> {
 	
 	private final String sqlGetId = "CALL NEXT VALUE FOR SEQ_PEDIDO";
 	private final String sqlInsert = "INSERT INTO PEDIDO (ID,DATA,ID_CLIENTE) VALUES(?,?,?)";
-	private final String sqlInsertItem = "INSERT INTO ITEM_DO_PEDIDO (ID_PEDIDO, ID_PRODUTO,QUANTIDADE) VALUES(?,?)";
+	private final String sqlInsertItem = "INSERT INTO ITEM_DO_PEDIDO (ID_PEDIDO, ID_PRODUTO,QTDADE) VALUES(?,?,?)";
 	private final String sqlAll = 	"SELECT * FROM PEDIDO";
+	private final String sqlById = "SELECT * FROM PEDIDO WHERE ID = ?";
+	private final String sqlSelectByAtributo = "SELECT * FROM PEDIDO WHERE %s = ?";
 	
 	@Override
 	public void insert(Pedido object) throws SQLException, MyException {
@@ -75,15 +78,48 @@ public class PedidoDAO extends GenericDao<Pedido> {
 	}
 
 	@Override
-	List<Pedido> selectByAtributo(String field, String value) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Pedido> selectByAtributo(String field, String value) throws SQLException {
+		getConnection();
+		
+		List<Pedido> lista = new ArrayList<Pedido>();
+		ResultSet rs = null;
+		try (PreparedStatement stmt = connection.prepareSQL(String.format(sqlSelectByAtributo, field)); ) {
+			stmt.setString(1, value);
+				
+			rs = stmt.executeQuery();
+			
+			lista = loadPedido(rs);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			if (rs != null)  rs.close();
+			connection.desconectar();
+		}
+		return lista;
 	}
 
 	@Override
 	Pedido findById(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		getConnection();
+		
+		Pedido cli = null;
+		ResultSet rs = null;
+		try (PreparedStatement stmt = connection.prepareSQL(sqlById); ) {
+			stmt.setInt(1, id);
+				
+			rs = stmt.executeQuery();
+			
+			List<Pedido> lista = loadPedido(rs);
+			if (lista.size() > 0) {
+				cli = lista.get(0);
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null)  rs.close(); 
+			connection.desconectar();
+		}
+		return cli;
 	}
 
 	@Override
@@ -114,6 +150,7 @@ public class PedidoDAO extends GenericDao<Pedido> {
 				ped.setId(rs.getInt("ID"));
 				ped.setCliente(new Cliente());
 				ped.getCliente().setId(rs.getInt("ID_CLIENTE"));
+				ped.setData(rs.getString("DATA"));
 				System.out.println("ID: " + ped.getId() + "Cliente:" + ped.getCliente().getId());
 				lista.add(ped);
 			} while(rs.next());

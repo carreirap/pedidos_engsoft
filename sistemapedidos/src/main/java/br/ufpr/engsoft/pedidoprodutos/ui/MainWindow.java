@@ -2,7 +2,10 @@ package br.ufpr.engsoft.pedidoprodutos.ui;
 
 import java.awt.CardLayout;
 import java.awt.EventQueue;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -22,8 +26,8 @@ import br.ufpr.engsoft.pedidoprodutos.Cliente;
 import br.ufpr.engsoft.pedidoprodutos.Pedido;
 import br.ufpr.engsoft.pedidoprodutos.Produto;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ClienteTableModel;
+import br.ufpr.engsoft.pedidoprodutos.ui.table.PedidoModel;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ProdutoTableModel;
-import java.awt.Color;
 
 public class MainWindow extends JFrame {
 
@@ -31,6 +35,10 @@ public class MainWindow extends JFrame {
 	private JPanel panelCliente;
 	private JPanel panelProduto;
 	private PanelPedido panelPedido;
+	private JPanel panelConsultaPedido;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField inputCPFCliente;
 	
 	
 	
@@ -76,6 +84,16 @@ public class MainWindow extends JFrame {
 		
 		JMenuItem mntmCadastrar = new JMenuItem("Cadastrar");
 		mnPedido.add(mntmCadastrar);
+		mntmCadastrar.addActionListener(
+				ev -> {removePanels(); createPanelPedido();}
+				);
+		
+		JMenuItem mntmConsultar = new JMenuItem("Consultar");
+		mnPedido.add(mntmConsultar);
+		mntmConsultar.addActionListener(
+				ev -> {removePanels(); createPanelPedido();}
+				);
+		
 		
 		JMenu mnProduto = new JMenu("Produto");
 		menuBar.add(mnProduto);
@@ -94,7 +112,9 @@ public class MainWindow extends JFrame {
 		
 		//createClientePanel();
 	
-		createPanelPedido();
+		//createPanelPedido();
+		
+		createPanelConsultaPedido();
 		
 		//createPanelBuscaProduto();
 	}
@@ -102,12 +122,15 @@ public class MainWindow extends JFrame {
 	private void removePanels() {
 		if (panelCliente != null) { 
 			contentPane.remove(panelCliente);
+			panelCliente = null;
 		}
 		if (panelProduto != null) { 
 			contentPane.remove(panelProduto); 
+			panelProduto = null;
 		}
 		if (panelPedido != null) {
-			contentPane.remove(panelProduto);
+			contentPane.remove(panelPedido);
+			panelPedido = null;
 		}
 		
 	}
@@ -115,7 +138,97 @@ public class MainWindow extends JFrame {
 	private void createPanelPedido() {
 		panelPedido = new PanelPedido();
 		contentPane.add(panelPedido, "name_panelPedio");
+		contentPane.revalidate();
+		contentPane.repaint();
+	}
+	
+	private void createPanelConsultaPedido() {
+		panelConsultaPedido = new JPanel();
+		contentPane.add(panelConsultaPedido, "name_panelConsultaPedio");
+		panelConsultaPedido.setLayout(null);
 		
+		JLabel lblConsultaPedido = new JLabel("Consulta Pedido");
+		lblConsultaPedido.setBounds(243, 5, 147, 16);
+		panelConsultaPedido.add(lblConsultaPedido);
+		
+		JLabel lblCpf_1 = new JLabel("CPF:");
+		lblCpf_1.setBounds(41, 47, 40, 16);
+		panelConsultaPedido.add(lblCpf_1);
+		
+		inputCPFCliente = new JTextField();
+		inputCPFCliente.setBounds(93, 44, 168, 22);
+		inputCPFCliente.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				char key = event.getKeyChar();
+				boolean press = (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_DELETE || Character
+						.isDigit(key));
+				
+				if (!press || inputCPFCliente.getText().length() >= 11 ) // limit textfield to 3 characters
+					event.consume();
+				
+			}
+			
+		});
+
+		panelConsultaPedido.add(inputCPFCliente);
+		inputCPFCliente.setColumns(10);
+		
+		PedidoModel model = new PedidoModel();
+		
+		JTable table = new JTable(model);
+		table.setColumnSelectionAllowed(true);
+		table.setBounds(104, 284, 1, 1);
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+//	        	inputId.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+//	        	inputDescrProduto.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+//	        	lblId.setVisible(true);
+//	        	inputId.setVisible(true);
+	        }
+	    });
+		
+		JScrollPane scrollPane2 = new JScrollPane(table);
+		scrollPane2.setBounds(15, 79, 581, 146);
+		panelConsultaPedido.add(scrollPane2);
+		
+		JButton btnConsultar = new JButton("Consultar");
+		btnConsultar.setBounds(278, 42, 97, 25);
+		btnConsultar.addActionListener(e -> {
+			Pedido ped = new Pedido();
+			try {
+				if (inputCPFCliente.getText().equals("") ) 
+					return;
+				ped.setCliente(new Cliente());
+				ped.getCliente().setCpf(inputCPFCliente.getText());
+				List<Pedido> lst = ped.consultaPedido();
+				model.setDatas(lst);
+				table.repaint();
+				table.revalidate();
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//refreshTable();
+		
+		});
+		panelConsultaPedido.add(btnConsultar);
+		
+		
+			/*****/
+		
+		contentPane.revalidate();
+		contentPane.repaint();
 	}
 
 	private void createPanelProduto() {
@@ -138,6 +251,22 @@ public class MainWindow extends JFrame {
 		
 		JTextField inputDescrProduto = new JTextField();
 		inputDescrProduto.setBounds(100, 79, 195, 22);
+		inputDescrProduto.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				if (inputDescrProduto.getText().length() >= 45 ) // limit textfield to 3 characters
+					event.consume();
+			}
+			
+		});
 		panelProduto.add(inputDescrProduto);
 		inputDescrProduto.setColumns(45);
 		
@@ -166,6 +295,9 @@ public class MainWindow extends JFrame {
 		btnSalvar.addActionListener(
 				e -> {
 					try {
+						if (inputDescrProduto.getText().equals("")) {
+							return;
+						}
 						Produto pro = new Produto();
 						pro.setDescricao(inputDescrProduto.getText().trim());
 						
@@ -196,6 +328,8 @@ public class MainWindow extends JFrame {
 		btnExcluir.addActionListener(
 				e -> {
 					try {
+						if (inputId.getText().equals("") ) 
+							return;
 						Produto prod = new Produto();
 						prod.setId(Integer.parseInt(inputId.getText()));
 						prod.deletar();
@@ -233,6 +367,27 @@ public class MainWindow extends JFrame {
 		
 		JTextField inputCPF = new JTextField();
 		inputCPF.setBounds(103, 111, 147, 22);
+		inputCPF.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				char key = event.getKeyChar();
+				boolean press = (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_DELETE || Character
+						.isDigit(key));
+				
+				if (!press || inputCPF.getText().length() >= 11 ) // limit textfield to 3 characters
+					event.consume();
+			}
+			
+		});
+
 		panelCliente.add(inputCPF);
 		inputCPF.setColumns(11);
 		
@@ -242,6 +397,23 @@ public class MainWindow extends JFrame {
 		
 		JTextField inputNomecliente = new JTextField();
 		inputNomecliente.setBounds(104, 44, 116, 22);
+		inputNomecliente.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				if (inputNomecliente.getText().length() >= 30 ) // limit textfield to 3 characters
+					event.consume();
+			}
+			
+		});
+
 		panelCliente.add(inputNomecliente);
 		inputNomecliente.setColumns(30);
 		contentPane.add(panelCliente, "name_9242687062646");
@@ -252,6 +424,22 @@ public class MainWindow extends JFrame {
 		
 		JTextField inputSobreNome = new JTextField();
 		inputSobreNome.setBounds(103, 76, 199, 22);
+		inputSobreNome.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				if (inputSobreNome.getText().length() >= 50 ) // limit textfield to 3 characters
+					event.consume();
+			}
+			
+		});
 		panelCliente.add(inputSobreNome);
 		inputSobreNome.setColumns(50);
 		
@@ -311,6 +499,7 @@ public class MainWindow extends JFrame {
 						table.revalidate();
 						
 					} catch (SQLException ex) {
+						JOptionPane.showMessageDialog(null, ex.getMessage(),"Erro", JOptionPane.ERROR_MESSAGE);
 						ex.printStackTrace();
 					}
 				});

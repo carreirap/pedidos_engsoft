@@ -45,7 +45,7 @@ public class PedidoTest {
 			ped.setItens(new ArrayList<ItemPedido>());
 			ProdutoDAO prodDao = new ProdutoDAO();
 
-			List<Produto> listProd = prodDao.selectByDescricao("Manga Manteiga");
+			List<Produto> listProd = prodDao.selectByAtributo("DESCRICAO","Manga Manteiga");
 			
 			ped.getItens().forEach(p-> { p.setQuantidade(10); p.setProduto(listProd.get(0)); });
 			dao.insert(ped);

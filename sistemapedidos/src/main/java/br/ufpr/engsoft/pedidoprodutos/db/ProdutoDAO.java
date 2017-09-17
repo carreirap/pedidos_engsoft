@@ -57,9 +57,8 @@ public class ProdutoDAO extends GenericDao<Produto> {
 		
 		List<Produto> lista = new ArrayList<Produto>();
 		ResultSet rs = null;
-		try (PreparedStatement stmt = connection.prepareSQL(sqlSelectByDescricao); ) {
-			stmt.setString(1, field);
-			stmt.setString(2, value);
+		try (PreparedStatement stmt = connection.prepareSQL(String.format(sqlSelectByAtributo, field)); ) {
+			stmt.setString(1, value);
 				
 			rs = stmt.executeQuery();
 			
