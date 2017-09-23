@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
+import br.ufpr.engsoft.pedidoprodutos.ItemPedido;
 import br.ufpr.engsoft.pedidoprodutos.MyException;
 import br.ufpr.engsoft.pedidoprodutos.Pedido;
 import br.ufpr.engsoft.pedidoprodutos.Produto;
@@ -18,6 +19,7 @@ public class PedidoDAO extends GenericDao<Pedido> {
 	private final String sqlInsertItem = "INSERT INTO ITEM_DO_PEDIDO (ID_PEDIDO, ID_PRODUTO,QTDADE) VALUES(?,?,?)";
 	private final String sqlAll = 	"SELECT * FROM PEDIDO";
 	private final String sqlById = "SELECT * FROM PEDIDO WHERE ID = ?";
+	private final String sqlItemPedido = "SELECT * FROM ITEM_DO_PEDIDO WHERE ID_PEDIDO = ?";
 	private final String sqlSelectByAtributo = "SELECT * FROM PEDIDO WHERE %s = ?";
 	
 	@Override
@@ -99,10 +101,10 @@ public class PedidoDAO extends GenericDao<Pedido> {
 	}
 
 	@Override
-	Pedido findById(int id) throws SQLException {
+	public Pedido findById(int id) throws SQLException {
 		getConnection();
 		
-		Pedido cli = null;
+		Pedido ped = null;
 		ResultSet rs = null;
 		try (PreparedStatement stmt = connection.prepareSQL(sqlById); ) {
 			stmt.setInt(1, id);
@@ -111,7 +113,11 @@ public class PedidoDAO extends GenericDao<Pedido> {
 			
 			List<Pedido> lista = loadPedido(rs);
 			if (lista.size() > 0) {
-				cli = lista.get(0);
+				ped = lista.get(0);
+			}
+			if (ped != null) {
+				findAllPedido(id, ped);
+				
 			}
 		} catch (SQLException e) {
 			throw e;
@@ -119,7 +125,26 @@ public class PedidoDAO extends GenericDao<Pedido> {
 			if (rs != null)  rs.close(); 
 			connection.desconectar();
 		}
-		return cli;
+		return ped;
+	}
+
+	private void findAllPedido(int id, Pedido ped) throws SQLException {
+		ResultSet rsItem = null;
+		try (PreparedStatement stmtItem = connection.prepareSQL(sqlItemPedido); ) {
+			stmtItem.setInt(1, id);
+			
+			rsItem = stmtItem.executeQuery();
+			if (rsItem.next()) {
+				ped.setItens(new ArrayList<ItemPedido>());
+				do {
+					ItemPedido item = new ItemPedido();
+					item.setProduto(new Produto());
+					item.getProduto().setId(rsItem.getInt("ID_PRODUTO"));
+					item.setQuantidade(rsItem.getInt("QTDADE"));
+					ped.getItens().add(item);
+				} while (rsItem.next());
+			}
+		}
 	}
 
 	@Override

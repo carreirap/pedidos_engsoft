@@ -24,6 +24,13 @@ public class Produto {
 		ProdutoDAO dao = new ProdutoDAO();
 		dao.delete(id);
 	}
+	
+	public void findProduto() throws SQLException {
+		ProdutoDAO dao = new ProdutoDAO();
+		Produto prod = dao.findById(this.getId());
+		this.setDescricao(prod.getDescricao());
+		this.setId(prod.getId());
+	}
 
 	public int getId() {
 		return id;

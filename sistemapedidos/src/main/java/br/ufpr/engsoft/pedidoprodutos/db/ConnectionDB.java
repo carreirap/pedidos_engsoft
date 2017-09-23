@@ -93,6 +93,12 @@ public class ConnectionDB {
 	        String sql = "ALTER TABLE PEDIDO "
 	        	+ "ADD FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTE (ID);";
 	        result = stmt.executeUpdate(sql);
+	        sql = "ALTER TABLE ITEM_DO_PEDIDO "
+		        	+ "ADD FOREIGN KEY (ID_PRODUTO) REFERENCES PRODUTO (ID);";
+	        result = stmt.executeUpdate(sql);
+	        sql = "ALTER TABLE ITEM_DO_PEDIDO "
+		        	+ "ADD FOREIGN KEY (ID_PEDIDO) REFERENCES PEDIDO (ID);";
+	        result = stmt.executeUpdate(sql);
 	        
 	         System.out.println(result);
 			// Run script here

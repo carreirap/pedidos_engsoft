@@ -35,6 +35,16 @@ public class Pedido {
 		lst.forEach(p -> p.setCliente(this.getCliente()));
 		return lst;
 	}
+	
+	public void buscarPedidoCompleto() throws SQLException {
+		PedidoDAO dao = new PedidoDAO();
+		Pedido ped = dao.findById(this.getId());
+		this.setItens(ped.getItens());
+		
+		for (ItemPedido item : this.getItens()) {
+			item.getProduto().findProduto();
+		}
+	}
 
 	public int getId() {
 		return id;

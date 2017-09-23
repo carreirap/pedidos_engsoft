@@ -29,6 +29,7 @@ public class PanelPedido extends JPanel {
 	JTextField inputCPFCliente;
 	JTextField inputCodProduto;
 	JLabel lblDescProduto;
+	JLabel lblNomeCliente;
 	ItemPedidoModel model;
 	JTable table;
 	JTextField inputQtd;
@@ -65,6 +66,10 @@ public class PanelPedido extends JPanel {
 		add(inputCPFCliente);
 		inputCPFCliente.setColumns(11);
 		
+		lblNomeCliente = new JLabel("");
+		lblNomeCliente.setBounds(224, 29, 212, 21);
+		add(lblNomeCliente);
+		
 		JLabel lblIdProduto = new JLabel("Id Produto:");
 		lblIdProduto.setBounds(17, 62, 64, 16);
 		add(lblIdProduto);
@@ -91,12 +96,12 @@ public class PanelPedido extends JPanel {
 		add(inputCodProduto);
 		inputCodProduto.setColumns(11);
 		
-		JButton button = new JButton("Buscar Produto");
-		button.addActionListener(e -> { 
+		JButton btnBuscarProduto = new JButton("Buscar Produto");
+		btnBuscarProduto.addActionListener(e -> { 
 			
-		JPanel panelBuscaProduto = new PanelBuscaProdutoUI(this);
+			JPanel panelBuscaProduto = new PanelBuscaProdutoUI(this);
 			
-		final JDialog frame = new JDialog((JFrame)getRootPane().getParent(), "Buscar Produtos", true);
+			final JDialog frame = new JDialog((JFrame)getRootPane().getParent(), "Buscar Produtos", true);
 			frame.setLayout(null);
 			
 			frame.setContentPane(panelBuscaProduto);
@@ -110,8 +115,29 @@ public class PanelPedido extends JPanel {
 			panelBuscaProduto.repaint();
 			
 		});
-		button.setBounds(441, 58, 127, 24);
-		add(button);
+		btnBuscarProduto.setBounds(441, 58, 127, 24);
+		add(btnBuscarProduto);
+		
+		JButton btnBuscarCliente = new JButton("Buscar Cliente");
+		btnBuscarCliente.setBounds(441, 24, 127, 25);
+		btnBuscarCliente.addActionListener(e -> { 
+		JPanel panelBuscaCliente = new PanelBuscaClienteUI(this);
+		
+		final JDialog frame = new JDialog((JFrame)getRootPane().getParent(), "Buscar Cliente", true);
+			frame.setLayout(null);
+			
+			frame.setContentPane(panelBuscaCliente);
+			frame.setBounds(110, 120, 619, 349);
+			frame.setPreferredSize(new Dimension(619, 349));
+			frame.pack();
+			frame.setVisible(true);
+			frame.revalidate();
+			frame.repaint();
+						
+			panelBuscaCliente.repaint();
+			
+		});
+		add(btnBuscarCliente);
 		
 		lblDescProduto = new JLabel("");
 		lblDescProduto.setBounds(221, 62, 208, 16);
@@ -175,6 +201,7 @@ public class PanelPedido extends JPanel {
 		
 		
 		
+		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 	        public void valueChanged(ListSelectionEvent event) {
 //	        	inputId.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
@@ -216,6 +243,7 @@ public class PanelPedido extends JPanel {
 						inputCPFCliente.setText("");
 						inputCodProduto.setText("");
 						lblDescProduto.setText("");
+						lblNomeCliente.setText("");
 						refreshTable();
 						JOptionPane.showMessageDialog(null, "Pedido gravado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 					} catch (Exception ex) {
@@ -231,9 +259,9 @@ public class PanelPedido extends JPanel {
 	
 	private boolean checkValues() {
 		
-		if (inputCPFCliente.getText().equals("") ||
-				lblDescProduto.getText().equals("") ||
-			    inputQtd.getText().equals("") ) {
+		if (inputCPFCliente.getText().trim().equals("") ||
+				lblDescProduto.getText().trim().equals("") ||
+			    inputQtd.getText().trim().equals("") || inputQtd.getText().trim().equals("0") ) {
 			return false;
 		}
 		return true;

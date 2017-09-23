@@ -52,7 +52,7 @@ public class ProdutoDAO extends GenericDao<Produto> {
 	}
 
 	@Override
-	List<Produto> selectByAtributo(String field, String value) throws SQLException {
+	public List<Produto> selectByAtributo(String field, String value) throws SQLException {
 		getConnection();
 		
 		List<Produto> lista = new ArrayList<Produto>();

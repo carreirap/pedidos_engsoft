@@ -1,6 +1,7 @@
 package br.ufpr.engsoft.pedidoprodutos;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpr.engsoft.pedidoprodutos.db.ClienteDAO;
@@ -37,6 +38,20 @@ public class Cliente {
 			throw new MyException("CPF informado não cadastrado");
 		}
 		this.id = lst.get(0).getId();
+		this.nome = lst.get(0).getNome();
+		this.sobreNome = lst.get(0).getSobreNome();
+	}
+	
+	public List<Cliente> listarClientes() {
+		ClienteDAO dao = new ClienteDAO();
+		try {
+			List<Cliente> l = dao.findAll();
+			return l;
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}	
+		return new ArrayList<Cliente>();
 	}
 
 	public int getId() {

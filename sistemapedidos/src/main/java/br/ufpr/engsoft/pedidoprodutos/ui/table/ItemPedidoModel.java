@@ -33,6 +33,10 @@ public class ItemPedidoModel extends AbstractTableModel {
 		this.data.add(item);
 	}
 	
+	public void setDatas(List<ItemPedido> itens) {
+		this.data = itens;
+	}
+	
 	@Override
 	public String getColumnName(int column) {
 	   return columnNames[column];

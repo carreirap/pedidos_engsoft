@@ -2,12 +2,15 @@ package br.ufpr.engsoft.pedidoprodutos.ui;
 
 import java.awt.CardLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,11 +26,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
+import br.ufpr.engsoft.pedidoprodutos.MyException;
 import br.ufpr.engsoft.pedidoprodutos.Pedido;
 import br.ufpr.engsoft.pedidoprodutos.Produto;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ClienteTableModel;
+import br.ufpr.engsoft.pedidoprodutos.ui.table.ItemPedidoModel;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.PedidoModel;
 import br.ufpr.engsoft.pedidoprodutos.ui.table.ProdutoTableModel;
+import br.ufpr.engsoft.pedidoprodutos.util.ValidaCPF;
 
 public class MainWindow extends JFrame {
 
@@ -38,7 +44,8 @@ public class MainWindow extends JFrame {
 	private JPanel panelConsultaPedido;
 	private JTextField textField;
 	private JTextField textField_1;
-	private JTextField inputCPFCliente;
+	JComboBox<String> comboBoxCpfCliente;
+	//private JTextField inputCPFCliente;
 	
 	
 	
@@ -91,7 +98,7 @@ public class MainWindow extends JFrame {
 		JMenuItem mntmConsultar = new JMenuItem("Consultar");
 		mnPedido.add(mntmConsultar);
 		mntmConsultar.addActionListener(
-				ev -> {removePanels(); createPanelPedido();}
+				ev -> {removePanels(); createPanelConsultaPedido();}
 				);
 		
 		
@@ -133,11 +140,17 @@ public class MainWindow extends JFrame {
 			panelPedido = null;
 		}
 		
+		if (panelConsultaPedido != null) {
+			contentPane.remove(panelConsultaPedido);
+			panelConsultaPedido = null;
+		}
+		
 	}
 	
 	private void createPanelPedido() {
 		panelPedido = new PanelPedido();
 		contentPane.add(panelPedido, "name_panelPedio");
+		
 		contentPane.revalidate();
 		contentPane.repaint();
 	}
@@ -155,63 +168,108 @@ public class MainWindow extends JFrame {
 		lblCpf_1.setBounds(41, 47, 40, 16);
 		panelConsultaPedido.add(lblCpf_1);
 		
-		inputCPFCliente = new JTextField();
-		inputCPFCliente.setBounds(93, 44, 168, 22);
-		inputCPFCliente.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-			}
-
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-			}
-
-			@Override
-			public void keyTyped(KeyEvent event) {
-				char key = event.getKeyChar();
-				boolean press = (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_DELETE || Character
-						.isDigit(key));
-				
-				if (!press || inputCPFCliente.getText().length() >= 11 ) // limit textfield to 3 characters
-					event.consume();
-				
-			}
-			
+		JLabel lblNomeCliente = new JLabel("");
+		lblNomeCliente.setBounds(243, 46, 228, 22);
+		panelConsultaPedido.add(lblNomeCliente);
+		
+		Cliente cli = new Cliente();
+		List<Cliente> lst = cli.listarClientes();
+		comboBoxCpfCliente = new JComboBox<String>();
+		comboBoxCpfCliente.addItem("Selecione CPF");
+		for(Cliente c: lst)
+			comboBoxCpfCliente.addItem(c.getCpf());
+		comboBoxCpfCliente.setBounds(77, 44, 147, 22);
+		comboBoxCpfCliente.addActionListener(new ActionListener() {
+			 
+		    @Override
+		    public void actionPerformed(ActionEvent event) {
+		        JComboBox<String> combo = (JComboBox<String>) event.getSource();
+		        String selectedBook = (String) combo.getSelectedItem();
+		        Cliente cli = new Cliente();
+		        cli.setCpf(selectedBook);
+		        try {
+					cli.consultarCPF();
+					lblNomeCliente.setText(cli.getNome() + " " + cli.getSobreNome());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} catch (MyException e) {
+					e.printStackTrace();
+				}
+		    }
 		});
-
-		panelConsultaPedido.add(inputCPFCliente);
-		inputCPFCliente.setColumns(10);
+		panelConsultaPedido.add(comboBoxCpfCliente);
+		
+		
+//		inputCPFCliente = new JTextField();
+//		inputCPFCliente.setBounds(93, 44, 168, 22);
+//		inputCPFCliente.addKeyListener(new KeyListener() {
+//			@Override
+//			public void keyPressed(KeyEvent arg0) {
+//			}
+//
+//			@Override
+//			public void keyReleased(KeyEvent arg0) {
+//			}
+//
+//			@Override
+//			public void keyTyped(KeyEvent event) {
+//				char key = event.getKeyChar();
+//				boolean press = (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_DELETE || Character
+//						.isDigit(key));
+//				
+//				if (!press || inputCPFCliente.getText().length() >= 11 ) // limit textfield to 3 characters
+//					event.consume();
+//				
+//			}
+//			
+//		});
+//
+//		panelConsultaPedido.add(inputCPFCliente);
+//		inputCPFCliente.setColumns(10);
 		
 		PedidoModel model = new PedidoModel();
+		ItemPedidoModel modelItem = new ItemPedidoModel();
 		
 		JTable table = new JTable(model);
 		table.setColumnSelectionAllowed(true);
 		table.setBounds(104, 284, 1, 1);
 		
+		JTable tableItem = new JTable(modelItem);
+		tableItem.setColumnSelectionAllowed(true);
+		tableItem.setBounds(104, 284, 1, 1);
+		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 	        public void valueChanged(ListSelectionEvent event) {
-//	        	inputId.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
-//	        	inputDescrProduto.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
-//	        	lblId.setVisible(true);
-//	        	inputId.setVisible(true);
+	        	Pedido pedido = new Pedido();
+	        	pedido.setId(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
+	        	try {
+					pedido.buscarPedidoCompleto();
+					modelItem.setDatas(pedido.getItens());
+					tableItem.repaint();
+					tableItem.revalidate();
+				} catch (SQLException e) {
+					
+					e.printStackTrace();
+				}
 	        }
 	    });
 		
 		JScrollPane scrollPane2 = new JScrollPane(table);
-		scrollPane2.setBounds(15, 79, 581, 146);
+		scrollPane2.setBounds(18, 82, 581, 118);
 		panelConsultaPedido.add(scrollPane2);
 		
 		JButton btnConsultar = new JButton("Consultar");
-		btnConsultar.setBounds(278, 42, 97, 25);
+		btnConsultar.setBounds(502, 43, 97, 25);
 		btnConsultar.addActionListener(e -> {
 			Pedido ped = new Pedido();
 			try {
-				if (inputCPFCliente.getText().equals("") ) 
+				System.out.println((String) comboBoxCpfCliente.getSelectedItem() + " " + comboBoxCpfCliente.getSelectedIndex());
+				if (comboBoxCpfCliente.getSelectedIndex() == 0 ) 
 					return;
 				ped.setCliente(new Cliente());
-				ped.getCliente().setCpf(inputCPFCliente.getText());
-				List<Pedido> lst = ped.consultaPedido();
-				model.setDatas(lst);
+				ped.getCliente().setCpf((String) comboBoxCpfCliente.getSelectedItem());
+				List<Pedido> lstt = ped.consultaPedido();
+				model.setDatas(lstt);
 				table.repaint();
 				table.revalidate();
 				
@@ -223,6 +281,22 @@ public class MainWindow extends JFrame {
 		
 		});
 		panelConsultaPedido.add(btnConsultar);
+		
+		
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+	        }
+	    });
+		
+		JScrollPane scrollPaneItem = new JScrollPane(tableItem);
+		scrollPaneItem.setBounds(18, 235, 581, 118);
+		panelConsultaPedido.add(scrollPaneItem);
+		
+		JLabel lblItensDoPedido = new JLabel("Itens do Pedido");
+		lblItensDoPedido.setBounds(18, 213, 116, 16);
+		panelConsultaPedido.add(lblItensDoPedido);
+		
 		
 		
 			/*****/
@@ -318,6 +392,7 @@ public class MainWindow extends JFrame {
 						table.revalidate();
 						
 					} catch (SQLException ex) {
+						JOptionPane.showMessageDialog(null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 						ex.printStackTrace();
 					}
 				});
@@ -343,7 +418,15 @@ public class MainWindow extends JFrame {
 						table.revalidate();
 						
 					} catch (SQLException ex) {
-						ex.printStackTrace();
+						if (ex.getMessage().contains("foreign key no action")) {
+							JOptionPane.showMessageDialog(null, "Produto não pode ser excluído, existe uma associação com um ou mais Pedidos", "Erro", JOptionPane.ERROR_MESSAGE);
+							inputId.setText("");
+							inputId.setVisible(false);
+							lblId.setVisible(false);
+							inputDescrProduto.setText("");
+						} else {
+							JOptionPane.showMessageDialog(null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				});
 		panelProduto.add(btnExcluir);
@@ -477,30 +560,40 @@ public class MainWindow extends JFrame {
 		btnSalvar.addActionListener(
 				e -> {
 					try {
-						Cliente cli = new Cliente();
-						cli.setCpf(inputCPF.getText().trim());
-						cli.setNome(inputNomecliente.getText().trim());
-						cli.setSobreNome(inputSobreNome.getText().trim());
 						
-						if (!lblIdCliente.getText().equals("")) {
-							cli.setId(Integer.parseInt(lblIdCliente.getText().trim()));
-							cli.alterar();
+						if (ValidaCPF.isCPF(inputCPF.getText().trim())) {
+							Cliente cli = new Cliente();
+							cli.setCpf(inputCPF.getText().trim());
+							cli.setNome(inputNomecliente.getText().trim());
+							cli.setSobreNome(inputSobreNome.getText().trim());
+							
+							if (!lblIdCliente.getText().equals("")) {
+								cli.setId(Integer.parseInt(lblIdCliente.getText().trim()));
+								cli.alterar();
+							} else {
+								cli.salvarCliente();
+							}
+							model.listarClientes();
+							
+							inputCPF.setText("");
+							inputNomecliente.setText("");
+							inputSobreNome.setText("");
+							lblIdCliente.setText("");
+													
+							table.repaint();
+							table.revalidate();
 						} else {
-							cli.salvarCliente();
+							JOptionPane.showMessageDialog(null, "CPF informado é invalido!", "Erro", JOptionPane.ERROR_MESSAGE);
+							inputCPF.requestFocus();
 						}
-						model.listarClientes();
-						
-						inputCPF.setText("");
-						inputNomecliente.setText("");
-						inputSobreNome.setText("");
-						lblIdCliente.setText("");
-												
-						table.repaint();
-						table.revalidate();
 						
 					} catch (SQLException ex) {
-						JOptionPane.showMessageDialog(null, ex.getMessage(),"Erro", JOptionPane.ERROR_MESSAGE);
-						ex.printStackTrace();
+						if (ex.getMessage().contains("unique constraint")) {
+							JOptionPane.showMessageDialog(null, "Cliente já cadastrado com o CPF informado!","Erro", JOptionPane.ERROR_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(null, ex.getMessage(),"Erro", JOptionPane.ERROR_MESSAGE);
+						}
+							ex.printStackTrace();
 					}
 				});
 		panelCliente.add(btnSalvar);
@@ -525,6 +618,16 @@ public class MainWindow extends JFrame {
 						table.revalidate();
 						
 					} catch (SQLException ex) {
+						if (ex.getMessage().contains("foreign key no action")) {
+							JOptionPane.showMessageDialog(null, "Cliente não pode ser excluído, existe uma associação com um ou mais Pedidos", "Erro", JOptionPane.ERROR_MESSAGE);
+							inputCPF.setText("");
+							inputNomecliente.setText("");
+							inputSobreNome.setText("");
+							lblIdCliente.setText("");
+						} else {
+							JOptionPane.showMessageDialog(null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+						}
+						
 						ex.printStackTrace();
 					}
 				});
