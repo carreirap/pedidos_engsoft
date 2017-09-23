@@ -1,8 +1,10 @@
 package br.ufpr.engsoft.pedidoprodutos.db;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -15,7 +17,22 @@ public class ConnectionDB {
 	private ConnectionDB() {
 		
 	}
-	
+	/**
+	 * Verifica se o banco já foi criado
+	 * @param args
+	 * @return
+	 * @throws SQLException 
+	 */
+	public boolean verificarBancoExiste() throws SQLException {
+		DatabaseMetaData dbm = conn.getMetaData();
+		// check if "employee" table is there
+		ResultSet tables = dbm.getTables(null, null, "CLIENTE", null);
+		if (tables.next()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public static ConnectionDB getInstance() {
 		synchronized (ConnectionDB.class) {
@@ -39,6 +56,11 @@ public class ConnectionDB {
 			conn = DriverManager.getConnection("jdbc:hsqldb:file:../mydbpedidos;hsqldb.write_delay=false;shutdown‌​=false", "sa", "");
 			System.out.println("Connected "+ !conn.isClosed());
 			conn.setAutoCommit(true);
+			
+			if (this.verificarBancoExiste() == false) {
+				this.createDB();
+			}
+
 		} catch (SQLException e) {
 			throw new RuntimeException("Unable to load database", e);
 		} catch (ClassNotFoundException e) {
