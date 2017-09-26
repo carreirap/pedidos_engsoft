@@ -115,13 +115,13 @@ public class MainWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
 			
-		//createPanelProduto();
+		createPanelProduto();
 		
 		//createClientePanel();
 	
 		//createPanelPedido();
 		
-		createPanelConsultaPedido();
+		//createPanelConsultaPedido();
 		
 		//createPanelBuscaProduto();
 	}
@@ -150,6 +150,10 @@ public class MainWindow extends JFrame {
 	private void createPanelPedido() {
 		panelPedido = new PanelPedido();
 		contentPane.add(panelPedido, "name_panelPedio");
+		
+		JLabel lblCadastroDePedido = new JLabel("Cadastro de Pedido");
+		lblCadastroDePedido.setBounds(250, 4, 131, 16);
+		panelPedido.add(lblCadastroDePedido);
 		
 		contentPane.revalidate();
 		contentPane.repaint();
@@ -434,6 +438,10 @@ public class MainWindow extends JFrame {
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setBounds(22, 192, 581, 146);
 		panelProduto.add(scrollPane2);
+		
+		JLabel lblCadastroDeProduto = new JLabel("Cadastro de Produto");
+		lblCadastroDeProduto.setBounds(228, 5, 140, 16);
+		panelProduto.add(lblCadastroDeProduto);
 				
 		contentPane.revalidate();
 		contentPane.repaint();
@@ -636,6 +644,10 @@ public class MainWindow extends JFrame {
 		JScrollPane scrollPane2 = new JScrollPane(table);
 		scrollPane2.setBounds(22, 192, 581, 146);
 		panelCliente.add(scrollPane2);
+		
+		JLabel lblCadastroDeCliente = new JLabel("Cadastro de Cliente");
+		lblCadastroDeCliente.setBounds(235, 3, 161, 16);
+		panelCliente.add(lblCadastroDeCliente);
 		
 		panelCliente.setVisible(true);
 		
