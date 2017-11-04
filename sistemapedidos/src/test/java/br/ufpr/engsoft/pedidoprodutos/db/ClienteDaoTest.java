@@ -88,14 +88,14 @@ public class ClienteDaoTest {
 		ClienteDAO dao = new ClienteDAO();
 		
 		Cliente cli = new Cliente();
-		cli.setCpf("22222222222");
+		cli.setCpf("03648925105");
 		cli.setNome("Rosalvo");
 		cli.setSobreNome("Bruno");
 		try {
 			dao.insert(cli);
 			
 			List<Cliente> cliente = dao.selectByAtributo("nome","Rosalvo");
-			Assert.assertEquals("22222222222", cliente.get(0).getCpf());
+			Assert.assertEquals("03648925105", cliente.get(0).getCpf());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.getMessage());

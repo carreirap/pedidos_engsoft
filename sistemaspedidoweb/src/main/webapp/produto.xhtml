@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:menu="http://java.sun.com/jsf/composite/cui">
+
+<h:head>
+	<title>JSF 2.0 Hello World</title>
+</h:head>
+<h:body>
+	<menu:menubar></menu:menubar>
+	<h2>Cadastro de Produtos</h2>
+	<h:form prependId="false">
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Id:" id="lblId" rendered="#{produtoBean.showId}"/>
+			<h:inputText id="id" value="#{produtoBean.id}" rendered="#{produtoBean.showId}"/>
+					
+			<h:outputLabel value="Descrição:"/>
+			<h:inputText id="descricao" value="#{produtoBean.descricao}" />
+			
+			<h:panelGroup>
+				<h:commandButton value="Salvar" action="#{produtoBean.salvar}"/>
+				<h:commandButton value="Excluir" action="#{produtoBean.excluir}"/>
+			</h:panelGroup>
+		</h:panelGrid>
+	
+		<p:dataTable value="#{produtoBean.lstProdutos}" var="lst" selectionMode="single" 
+		 rowIndexVar="count" selection="#{produtoBean.selectedProduto}" rowKey="#{lst.id}">
+			
+			<p:column headerText="id">
+				<h:outputText value="#{lst.id}"/>
+			</p:column>
+			<p:column headerText="Descrição">
+				<h:outputText value="#{lst.descricao}"></h:outputText>
+			</p:column>	
+			<p:ajax event="rowSelect" listener="#{produtoBean.onRowSelect}" update="descricao id lblId" />
+		</p:dataTable>
+	</h:form>
+</h:body>
+</html>
