@@ -21,4 +21,5 @@ public class MenuBean implements Serializable {
 	public String goPedido() {
 		return "cadPedido.jsf";
 	}
+	
 }

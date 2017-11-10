@@ -1,7 +1,14 @@
 package br.ufpr.engsoft.pedidoprodutos;
 
-public class ItemPedido {
+import java.io.Serializable;
+
+public class ItemPedido implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8795832287154846353L;
+
 	private Produto produto;
 	
 	private int quantidade;

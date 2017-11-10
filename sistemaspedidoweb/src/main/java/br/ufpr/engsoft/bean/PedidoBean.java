@@ -2,17 +2,22 @@ package br.ufpr.engsoft.bean;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
 import br.ufpr.engsoft.pedidoprodutos.ItemPedido;
 import br.ufpr.engsoft.pedidoprodutos.MyException;
+import br.ufpr.engsoft.pedidoprodutos.Pedido;
 import br.ufpr.engsoft.pedidoprodutos.Produto;
 
+@SessionScoped
 @ManagedBean
 public class PedidoBean implements Serializable {
 
@@ -21,39 +26,17 @@ public class PedidoBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 4275214786598017090L;
 
-	private String cpf;
-	private String nomeCliente;
-	private int codigoProduto;
-	private String descricaoProduto;
+	private ProdutoBean produto;
 	private int quantidade;
 	private List<ItemPedido> lstItemPedidos;
-	private List<Cliente> lstClientes;
-	private Cliente selectedCliente;
+	private ClienteBean cliente;
 	
-	public Cliente getSelectedCliente() {
-		return selectedCliente;
+	public PedidoBean() {
+		produto = new ProdutoBean();
+		cliente = new ClienteBean();
+		lstItemPedidos = new ArrayList<ItemPedido>();
 	}
-	public void setSelectedCliente(Cliente selectedCliente) {
-		this.selectedCliente = selectedCliente;
-	}
-	public String getCpf() {
-		return cpf;
-	}
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-	public String getNomeCliente() {
-		return nomeCliente;
-	}
-	public void setNomeCliente(String nomeCliente) {
-		this.nomeCliente = nomeCliente;
-	}
-	public String getDescricaoProduto() {
-		return descricaoProduto;
-	}
-	public void setDescricaoProduto(String descricaoProduto) {
-		this.descricaoProduto = descricaoProduto;
-	}
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -61,11 +44,24 @@ public class PedidoBean implements Serializable {
 		return lstItemPedidos;
 	}
 	
-	public int getCodigoProduto() {
-		return codigoProduto;
+	public ProdutoBean getProduto() {
+		return produto;
 	}
-	public void setCodigoProduto(int codigoProduto) {
-		this.codigoProduto = codigoProduto;
+
+	public void setProduto(ProdutoBean produto) {
+		this.produto = produto;
+	}
+
+	public ClienteBean getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClienteBean cliente) {
+		this.cliente = cliente;
+	}
+
+	public void setLstItemPedidos(List<ItemPedido> lstItemPedidos) {
+		this.lstItemPedidos = lstItemPedidos;
 	}
 	public int getQuantidade() {
 		return quantidade;
@@ -73,45 +69,61 @@ public class PedidoBean implements Serializable {
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
-	public void setLstItemPedidos(List<ItemPedido> lstItemPedidos) {
-		this.lstItemPedidos = lstItemPedidos;
-	}
 	
-	public List<Cliente> getLstClientes() {
-		if (lstClientes == null) {
-			Cliente cli = new Cliente();
-			lstClientes = cli.listarClientes();
-		}
-		return lstClientes;
-	}
-	public void setLstClientes(List<Cliente> lstClientes) {
-		this.lstClientes = lstClientes;
-	}
-	public void incluir() {
-		if (lstItemPedidos == null) {
-			lstItemPedidos = new ArrayList<ItemPedido>();
-		}
+	public String incluir() {
+		
 		ItemPedido item = new ItemPedido();
 		item.setProduto(new Produto());
-		item.getProduto().setId(this.codigoProduto);
-		item.getProduto().setDescricao(this.getDescricaoProduto());
+		item.getProduto().setId(this.produto.getId());
+		item.getProduto().setDescricao(this.produto.getDescricao());
 		item.setQuantidade(this.quantidade);
 		
 		lstItemPedidos.add(item);
+		this.produto.setId(0);
+		this.produto.setDescricao("");
+		this.quantidade = 0;
+		return null;
 	}
 	
 	public void buscarNomeCliente(AjaxBehaviorEvent event) throws SQLException, MyException {
 		Cliente cli = new Cliente();
-		cli.setCpf(this.cpf);
+		cli.setCpf(this.cliente.getCpf());
 		cli.consultarCPF();
-		this.nomeCliente = cli.getNome() + " " + cli.getSobreNome();
+		cli.setNome(cli.getNome() + " " + cli.getSobreNome());
 	}
 	
 	public void buscarNomeProduto(AjaxBehaviorEvent event) throws SQLException {
 		Produto pro = new Produto();
-		pro.setId(this.codigoProduto);
+		pro.setId(this.produto.getId());
 		pro.findProduto();
-		this.descricaoProduto = pro.getDescricao();
+		this.produto.setDescricao(pro.getDescricao());
 		
+	}
+	
+//	public void onRowSelect(SelectEvent event) {
+//        //FacesMessage msg = new FacesMessage("Car Selected", ((Produto) event.getObject()).getDescricao());
+//		this.cliente.setNome(((Cliente) event.getObject()).getNome() + " " + ((Cliente) event.getObject()).getSobreNome());
+//        this.cliente.setCpf(((Cliente) event.getObject()).getCpf());
+//        //FacesContext.getCurrentInstance().addMessage(null, msg);
+//	}
+	
+	public void salvar() {
+		this.lstItemPedidos.forEach(System.out::println);
+		Pedido ped = new Pedido();
+		ped.setCliente(new Cliente());
+		ped.getCliente().setCpf(this.cliente.getCpf());
+		
+		Date d = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		ped.setData(format.format(d));
+		ped.setItens(this.lstItemPedidos);
+		try {
+
+			ped.savePedido();
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();;
+		}
+
 	}
 }
