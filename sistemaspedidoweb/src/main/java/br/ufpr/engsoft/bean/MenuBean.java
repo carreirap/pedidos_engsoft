@@ -22,4 +22,7 @@ public class MenuBean implements Serializable {
 		return "cadPedido.jsf";
 	}
 	
+	public String goConsultaPedido() {
+		return "conspedido.jsf";
+	}
 }

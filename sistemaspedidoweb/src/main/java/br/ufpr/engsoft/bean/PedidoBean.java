@@ -11,6 +11,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.primefaces.event.SelectEvent;
+
 import br.ufpr.engsoft.pedidoprodutos.Cliente;
 import br.ufpr.engsoft.pedidoprodutos.ItemPedido;
 import br.ufpr.engsoft.pedidoprodutos.MyException;
@@ -28,8 +30,11 @@ public class PedidoBean implements Serializable {
 
 	private ProdutoBean produto;
 	private int quantidade;
+	private Pedido selectedPedido;
 	private List<ItemPedido> lstItemPedidos;
+	private List<Pedido> lstPedidos;
 	private ClienteBean cliente;
+	private boolean showItens;
 	
 	public PedidoBean() {
 		produto = new ProdutoBean();
@@ -37,6 +42,14 @@ public class PedidoBean implements Serializable {
 		lstItemPedidos = new ArrayList<ItemPedido>();
 	}
 	
+	public boolean isShowItens() {
+		return showItens;
+	}
+
+	public void setShowItens(boolean showItens) {
+		this.showItens = showItens;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -50,6 +63,14 @@ public class PedidoBean implements Serializable {
 
 	public void setProduto(ProdutoBean produto) {
 		this.produto = produto;
+	}
+	
+	public Pedido getSelectedPedido() {
+		return selectedPedido;
+	}
+
+	public void setSelectedPedido(Pedido selectedPedido) {
+		this.selectedPedido = selectedPedido;
 	}
 
 	public ClienteBean getCliente() {
@@ -70,6 +91,18 @@ public class PedidoBean implements Serializable {
 		this.quantidade = quantidade;
 	}
 	
+	public void buscarPedidos() {
+		Pedido ped = new Pedido();
+		Cliente cli = new Cliente();
+		cli.setCpf(this.getCliente().getCpf());
+		ped.setCliente(cli);
+		try {
+			this.lstPedidos = ped.consultaPedido();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String incluir() {
 		
 		ItemPedido item = new ItemPedido();
@@ -85,6 +118,14 @@ public class PedidoBean implements Serializable {
 		return null;
 	}
 	
+	public List<Pedido> getLstPedidos() {
+		return lstPedidos;
+	}
+
+	public void setLstPedidos(List<Pedido> lstPedidos) {
+		this.lstPedidos = lstPedidos;
+	}
+
 	public void buscarNomeCliente(AjaxBehaviorEvent event) throws SQLException, MyException {
 		Cliente cli = new Cliente();
 		cli.setCpf(this.cliente.getCpf());
@@ -100,12 +141,15 @@ public class PedidoBean implements Serializable {
 		
 	}
 	
-//	public void onRowSelect(SelectEvent event) {
-//        //FacesMessage msg = new FacesMessage("Car Selected", ((Produto) event.getObject()).getDescricao());
-//		this.cliente.setNome(((Cliente) event.getObject()).getNome() + " " + ((Cliente) event.getObject()).getSobreNome());
-//        this.cliente.setCpf(((Cliente) event.getObject()).getCpf());
-//        //FacesContext.getCurrentInstance().addMessage(null, msg);
-//	}
+	public void onRowSelect(SelectEvent event) {
+		try {
+			this.selectedPedido.buscarPedidoCompleto();
+			this.lstItemPedidos = this.selectedPedido.getItens();
+			this.showItens = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+	}
 	
 	public void salvar() {
 		this.lstItemPedidos.forEach(System.out::println);

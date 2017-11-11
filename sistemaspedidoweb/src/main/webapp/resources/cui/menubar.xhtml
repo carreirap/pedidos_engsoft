@@ -25,31 +25,9 @@
 		 
 		        <p:submenu label="Pedido" icon="ui-icon-help">
 		            <p:menuitem value="Cadastro" action="#{menuBean.goPedido}" />
-		            <p:submenu label="Search" icon="ui-icon-search">
-		                <p:submenu label="Text">
-		                    <p:menuitem value="Workspace" url="#" />
-		                </p:submenu>
-		                <p:menuitem value="File" url="#" />
-		            </p:submenu>
-		        </p:submenu>
-		 
-		        <p:submenu label="Actions" icon="ui-icon-gear">
-		            <p:submenu label="Ajax" icon="ui-icon-refresh">
-<!-- 		                <p:menuitem value="Save" actionListener="#{menuView.save}" icon="ui-icon-disk" update="messages"/> -->
-<!-- 		                <p:menuitem value="Update" actionListener="#{menuView.update}" icon="ui-icon-arrowrefresh-1-w" update="messages"/> -->
-		            </p:submenu>
-<!-- 		            <p:submenu label="Non-Ajax" icon="ui-icon-newwin"> -->
-<!-- 		                <p:menuitem value="Delete" actionListener="#{menuView.delete}" icon="ui-icon-close" update="messages" ajax="false"/> -->
-<!-- 		            </p:submenu> -->
-		        </p:submenu>
-		 
-		        <p:menuitem value="Quit" url="http://www.primefaces.org" icon="ui-icon-close" />
-		 
-<!-- 		        <f:facet name="options"> -->
-<!-- 		            <p:inputText style="margin-right:10px" placeholder="Search"/> -->
-<!-- 		            <p:commandButton type="button" value="Logout" icon="ui-icon-extlink" /> -->
-<!-- 		        </f:facet> -->
-		    </p:menubar>
+                    <p:menuitem value="Consulta" action="#{menuBean.goConsultaPedido}" />
+	            </p:submenu>
+	        </p:menubar>
 		</h:form>
 	</composite:implementation>
 </html>

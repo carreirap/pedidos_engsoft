@@ -1,13 +1,18 @@
 package br.ufpr.engsoft.pedidoprodutos;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpr.engsoft.pedidoprodutos.db.ClienteDAO;
 
-public class Cliente {
-	
+public class Cliente implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 	
 	private String nome;
