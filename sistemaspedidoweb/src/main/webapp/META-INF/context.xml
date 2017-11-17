@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<Context> 
+<!-- <Resource name="jdbc/orcljdbc_ds" auth="Container"
+   type="javax.sql.DataSource" 
+   driverClassName="oracle.jdbc.OracleDriver"
+   username="hr" 
+   password="hr" 
+   url="jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(HOST=myhost)(PORT=1521)(PROTOCOL=tcp))(CONNECT_DATA=(SERVICE_NAME=myorcldbservicename)))"   
+
+/> -->
+
+<Resource name="jdbc/MyDB" auth="Container"
+        type="javax.sql.DataSource"
+        maxActive="20"
+        maxIdle="30"
+        maxWait="10000"
+        username="SA"
+        driverClassName="org.hsqldb.jdbc.JDBCDriver"
+        url="jdbc:hsqldb:file:mydbpedidos" />
+
+</Context>

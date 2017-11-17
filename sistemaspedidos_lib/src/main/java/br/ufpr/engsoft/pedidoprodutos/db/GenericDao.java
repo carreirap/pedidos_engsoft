@@ -23,7 +23,11 @@ public abstract class GenericDao<T> {
 		
 	void getConnection() {
 		connection = ConnectionDB.getInstance();
-		connection.conectar();
+		try {
+			connection.conectarPool();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
