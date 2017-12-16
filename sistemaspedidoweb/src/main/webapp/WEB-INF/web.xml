@@ -21,4 +21,12 @@
 		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
 	</context-param>
+
+
+	<resource-ref>
+		<description>Pool de Conexão</description>
+		<res-ref-name>jdbc/MyDB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
 </web-app>

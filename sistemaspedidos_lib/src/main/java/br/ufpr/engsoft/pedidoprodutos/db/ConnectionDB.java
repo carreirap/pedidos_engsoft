@@ -8,6 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 public class ConnectionDB {
 	
 	private static ConnectionDB connection;
@@ -43,7 +46,9 @@ public class ConnectionDB {
 		
 		return connection;
 	}
-	
+	/**
+	 * Usar sem o container web
+	 */
 	public void conectar() {
 		
 		try {
@@ -66,6 +71,23 @@ public class ConnectionDB {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * Usar com pool de conexão do container web
+	 * @throws Exception
+	 */
+	public void conectarPool() throws Exception {
+		InitialContext context = new InitialContext();
+		DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/MyDB");
+		try {
+			conn =  ds.getConnection();
+			if (conn.isClosed() == false && this.verificarBancoExiste() == false) {
+				this.createDB();
+			}
+		} catch (SQLException e) {
+			throw new Exception(e.getMessage());
+		}
+	
 	}
 	
 	public void desconectar() {
