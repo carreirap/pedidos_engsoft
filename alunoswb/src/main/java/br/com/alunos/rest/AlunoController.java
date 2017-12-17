@@ -3,6 +3,7 @@
  */
 package br.com.alunos.rest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,31 +37,29 @@ public class AlunoController {
 	public List<AlunoRest> getAlunoRests() {
 		
 		List<Aluno> lst = service.findAll();
-		AlunoRest a = new AlunoRest();
-		a.setId(10);
-		a.setNome("Paulo B Carreira");
-		a.setIdade("38");
-		a.setEndereço("Theodoro Schneider 241");
-		
-		AlunoRest a1 = new AlunoRest();
-		a1.setId(10);
-		a1.setNome("Paulo B Carreira");
-		a1.setIdade("38");
-		a1.setEndereço("Theodoro Schneider 241");
-		
-		return Arrays.asList(a,a1);
+		List<AlunoRest> lst2 = new ArrayList<AlunoRest>();
+		lst.forEach(aluno->{
+			AlunoRest a1 = new AlunoRest();
+			a1.setId(aluno.getId());
+			a1.setNome(aluno.getNome());
+			a1.setCPF(aluno.getCpf());
+			a1.setEndereço(aluno.getEndereco().getLogradouro());
+			lst2.add(a1);
+		});
+		return lst2;
 	}
 	
 	@GET
 	@Path("{id}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public AlunoRest getAlunoRest(@PathParam("id") String id) {
-		AlunoRest a = new AlunoRest();
-		a.setId(10);
-		a.setNome("Isabela S Carreira");
-		a.setIdade("7");
-		a.setEndereço("Theodoro Schneider 241");
 		
+		Aluno aluno = service.findById(Integer.parseInt(id));
+		AlunoRest a = new AlunoRest();
+		a.setId(aluno.getId());
+		a.setNome(aluno.getNome());
+		//a.setIdade("7");
+		a.setEndereço(aluno.getEndereco().getLogradouro());
 		
 		return a;
 	}

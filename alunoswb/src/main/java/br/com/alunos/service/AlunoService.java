@@ -7,4 +7,6 @@ import br.com.alunos.entity.Aluno;
 public interface AlunoService {
 
 	List<Aluno> findAll();
+	
+	Aluno findById(int id);
 }

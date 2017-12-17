@@ -6,17 +6,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class AlunoRest {
 	
-	private Integer Id;
+	private Integer id;
 	private String CPF;
 	private String nome;
 	private String idade;
 	private String endereço;
 
+	
+	
 	public Integer getId() {
-		return Id;
+		return id;
 	}
 	public void setId(Integer id) {
-		Id = id;
+		this.id = id;
 	}
 	public String getCPF() {
 		return CPF;
@@ -44,7 +46,7 @@ public class AlunoRest {
 	}
 	@Override
 	public String toString() {
-		return "Aluno [Id=" + Id + ", CPF=" + CPF + ", nome=" + nome + ", idade=" + idade + ", endereço=" + endereço
+		return "Aluno [Id=" + id + ", CPF=" + CPF + ", nome=" + nome + ", idade=" + idade + ", endereço=" + endereço
 				+ "]";
 	}
 	
