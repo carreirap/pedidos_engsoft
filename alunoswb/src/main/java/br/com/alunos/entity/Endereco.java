@@ -17,7 +17,9 @@ public class Endereco implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pkendereco")
+	@SequenceGenerator(name="pkendereco",sequenceName="seqendereco",allocationSize=1,schema="public")
     private int id;
 
 	private String bairro;
@@ -30,8 +32,12 @@ public class Endereco implements Serializable {
 
 	private BigDecimal numero;
 
+	private String cidade;
+	
+	private String estado;
+
 	//bi-directional many-to-one association to Aluno
-	@OneToMany(mappedBy="endereco")
+	@OneToMany(mappedBy="endereco", fetch=FetchType.LAZY)
 	private List<Aluno> alunos;
 
 	public Endereco() {
@@ -105,6 +111,22 @@ public class Endereco implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 }

@@ -10,10 +10,8 @@ public class AlunoRest {
 	private String CPF;
 	private String nome;
 	private String idade;
-	private String endereço;
+	private EnderecoRest endereco;
 
-	
-	
 	public Integer getId() {
 		return id;
 	}
@@ -38,18 +36,16 @@ public class AlunoRest {
 	public void setIdade(String idade) {
 		this.idade = idade;
 	}
-	public String getEndereço() {
-		return endereço;
+	public EnderecoRest getEndereco() {
+		return endereco;
 	}
-	public void setEndereço(String endereço) {
-		this.endereço = endereço;
+	public void setEndereco(EnderecoRest endereco) {
+		this.endereco = endereco;
 	}
 	@Override
 	public String toString() {
-		return "Aluno [Id=" + id + ", CPF=" + CPF + ", nome=" + nome + ", idade=" + idade + ", endereço=" + endereço
+		return "AlunoRest [id=" + id + ", CPF=" + CPF + ", nome=" + nome + ", idade=" + idade + ", endereço=" + endereco
 				+ "]";
 	}
 	
-	
-
 }

@@ -4,7 +4,6 @@
 package br.com.alunos.rest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import br.com.alunos.entity.Aluno;
+import br.com.alunos.entity.Endereco;
 import br.com.alunos.service.AlunoService;
 
 /**
@@ -43,7 +43,11 @@ public class AlunoController {
 			a1.setId(aluno.getId());
 			a1.setNome(aluno.getNome());
 			a1.setCPF(aluno.getCpf());
-			a1.setEndereço(aluno.getEndereco().getLogradouro());
+			a1.setEndereco(new EnderecoRest());
+			a1.getEndereco().setNumero(aluno.getEndereco().getNumero().toString());
+			a1.getEndereco().setLogradouro(aluno.getEndereco().getLogradouro());
+			a1.getEndereco().setComplemento(aluno.getEndereco().getComplemento());
+			a1.getEndereco().setBairro(aluno.getEndereco().getBairro());
 			lst2.add(a1);
 		});
 		return lst2;
@@ -58,8 +62,11 @@ public class AlunoController {
 		AlunoRest a = new AlunoRest();
 		a.setId(aluno.getId());
 		a.setNome(aluno.getNome());
+		a.setIdade(aluno.getIdade().toString());
+		a.setCPF(aluno.getCpf());
+		
 		//a.setIdade("7");
-		a.setEndereço(aluno.getEndereco().getLogradouro());
+		
 		
 		return a;
 	}
@@ -69,7 +76,27 @@ public class AlunoController {
 	@Produces({MediaType.APPLICATION_JSON})
 	public AlunoRest postAlunoRest(AlunoRest a) {
 		
-		System.out.println(a);
+		Aluno ent = new Aluno();
+		ent.setCpf(a.getCPF());
+		ent.setNome(a.getNome());
+		ent.setIdade(Integer.parseInt(a.getIdade()));
+		ent.setNome(a.getNome());
+		ent.setEndereco(new Endereco());
+		ent.getEndereco().setLogradouro(a.getEndereco().getLogradouro());
+		ent.getEndereco().setBairro(a.getEndereco().getBairro());
+		ent.getEndereco().setComplemento(a.getEndereco().getComplemento());
+		ent.getEndereco().setCep(a.getEndereco().getCep());
+		ent.getEndereco().setCidade(a.getEndereco().getEstado());
+		ent.getEndereco().setEstado(a.getEndereco().getEstado());
+		
+		
+		
+		Aluno aluno = service.save(a, a.getEndereco());
+		
+		System.out.println(aluno);
+		
+		a.setId(aluno.getId());
+		a.getEndereco().setId(aluno.getEndereco().getId());
 		
 		return a;
 	}
@@ -90,7 +117,7 @@ public class AlunoController {
 		a.setId(10);
 		a.setNome("Isabela S Carreira");
 		a.setIdade("7");
-		a.setEndereço("Theodoro Schneider 241");
+		
 		
 		return a;
 	}
