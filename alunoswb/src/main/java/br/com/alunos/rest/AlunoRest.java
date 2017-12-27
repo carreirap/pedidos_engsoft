@@ -2,7 +2,7 @@ package br.com.alunos.rest;
 
 import javax.xml.bind.annotation.XmlRootElement;
 // pg_ctl -D alunoswb -l logfile start
-//pg_ctl -D ^"C^:^\pgsql^\data^" -l logfile start
+//./pg_ctl.exe -D "C:\pgsql\data" -l logfile start
 @XmlRootElement
 public class AlunoRest {
 	

@@ -43,11 +43,16 @@ public class AlunoController {
 			a1.setId(aluno.getId());
 			a1.setNome(aluno.getNome());
 			a1.setCPF(aluno.getCpf());
+			a1.setIdade(aluno.getIdade().toString());
 			a1.setEndereco(new EnderecoRest());
+			a1.getEndereco().setId(aluno.getEndereco().getId());
 			a1.getEndereco().setNumero(aluno.getEndereco().getNumero().toString());
 			a1.getEndereco().setLogradouro(aluno.getEndereco().getLogradouro());
 			a1.getEndereco().setComplemento(aluno.getEndereco().getComplemento());
 			a1.getEndereco().setBairro(aluno.getEndereco().getBairro());
+			a1.getEndereco().setEstado(aluno.getEndereco().getEstado());
+			a1.getEndereco().setCidade(aluno.getEndereco().getCidade());
+			a1.getEndereco().setCep(aluno.getEndereco().getCep());
 			lst2.add(a1);
 		});
 		return lst2;
@@ -76,7 +81,7 @@ public class AlunoController {
 	@Produces({MediaType.APPLICATION_JSON})
 	public AlunoRest postAlunoRest(AlunoRest a) {
 		
-		Aluno ent = new Aluno();
+		/*Aluno ent = new Aluno();
 		ent.setCpf(a.getCPF());
 		ent.setNome(a.getNome());
 		ent.setIdade(Integer.parseInt(a.getIdade()));
@@ -87,7 +92,7 @@ public class AlunoController {
 		ent.getEndereco().setComplemento(a.getEndereco().getComplemento());
 		ent.getEndereco().setCep(a.getEndereco().getCep());
 		ent.getEndereco().setCidade(a.getEndereco().getEstado());
-		ent.getEndereco().setEstado(a.getEndereco().getEstado());
+		ent.getEndereco().setEstado(a.getEndereco().getEstado());*/
 		
 		
 		
@@ -105,7 +110,7 @@ public class AlunoController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_JSON})
 	public AlunoRest putAlunoRest(AlunoRest a) {
-				
+		service.update(a);		
 		return a;
 	}
 	
@@ -113,10 +118,8 @@ public class AlunoController {
 	@DELETE
 	@Produces({MediaType.APPLICATION_JSON})
 	public AlunoRest deleteAlunoRest(@PathParam("id") String id) {
-		AlunoRest a = new AlunoRest();
-		a.setId(10);
-		a.setNome("Isabela S Carreira");
-		a.setIdade("7");
+		
+		service.delete(Integer.parseInt(id));
 		
 		
 		return a;

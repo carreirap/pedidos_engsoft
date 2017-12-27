@@ -10,7 +10,11 @@ public interface AlunoService {
 
 	List<Aluno> findAll();
 	
-	Aluno findById(int id);
+	Aluno findById(final int id);
 	
-	Aluno save(AlunoRest a, EnderecoRest e);
+	Aluno save(final AlunoRest a, final EnderecoRest e);
+	
+	void update(final AlunoRest a);
+	
+	void delete(final int id);
 }
