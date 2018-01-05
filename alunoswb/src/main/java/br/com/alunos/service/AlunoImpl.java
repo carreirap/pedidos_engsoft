@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 
 import br.com.alunos.entity.Aluno;
 import br.com.alunos.entity.Endereco;
+import br.com.alunos.exception.AlunoException;
 import br.com.alunos.repository.AlunoRepository;
 import br.com.alunos.repository.EnderecoRepository;
 import br.com.alunos.rest.AlunoRest;
@@ -105,12 +106,16 @@ public class AlunoImpl implements AlunoService {
 	}
 
 	@Override
-	public void delete(int id) {
+	public Aluno delete(int id) throws AlunoException {
 		Aluno aluno = alunoRepository.findById(id);
-		alunoRepository.delete(aluno);
-		aluno.getEndereco();
-		enderecoRepository.delete(aluno.getEndereco());
-		
+		if ( aluno != null) {
+			alunoRepository.delete(aluno);
+			aluno.getEndereco();
+			enderecoRepository.delete(aluno.getEndereco());
+		} else {
+			throw new AlunoException("Nao existe aluno com esse id para ser excluido");
+		}
+		return aluno;
 	}
 	
 	
