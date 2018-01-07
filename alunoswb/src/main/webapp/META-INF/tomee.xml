@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomee>
+  <!-- see http://tomee.apache.org/containers-and-resources.html -->
+
+  <!-- activate next line to be able to deploy applications in apps -->
+  <!-- <Deployments dir="apps" /> -->
+  <Resource id="myDB" type="DataSource" classpath="D:\\apache-tomee-plus-7.0.4\\lib\\postgresql-9.3-1102-jdbc41.jar">
+    #  PostgreSQL example
+    #
+    #  This connector will not work until you download the driver at:
+    #  http://jdbc.postgresql.org/download.html
+    JdbcDriver   org.postgresql.Driver
+    JdbcUrl  jdbc:postgresql://localhost:5432/alunoswb
+    UserName    carreira
+    Password    123456
+</Resource>
+</tomee>
