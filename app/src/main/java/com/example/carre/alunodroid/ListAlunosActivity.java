@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -55,8 +56,16 @@ public class ListAlunosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_alunos);
 
         mTextMessage = (TextView) findViewById(R.id.message);
+        String id = "";
+        Bundle extras = getIntent().getExtras();
+        id= extras.getString("idAluno");
+        if (id != null && !id.equals("")) {
+            carregarAlunoId(id);
+        } else {
+            carregar();
+        }
 
-        carregar();
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
@@ -91,6 +100,37 @@ public class ListAlunosActivity extends AppCompatActivity {
         } );
     }
 
+
+    public void carregarAlunoId(String id) {
+
+        AlunoService service = ControllerList.createService();
+
+        Call<Aluno> call = service.getAluno(id);
+        call.enqueue(new Callback<Aluno>() {
+
+            @Override
+            public void onResponse(Call<Aluno> call, Response<Aluno> response) {
+                if(response.isSuccessful()) {
+                    Aluno changesList = response.body();
+                    List<Aluno> lst = Arrays.asList(changesList);
+                    ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(getApplicationContext(),
+                            android.R.layout.simple_list_item_1, lst);
+                    ListView v = (ListView) findViewById(R.id.lstView);
+                    v.setAdapter(adapter);
+
+                    //changesList.forEach(change -> System.out.println(change.subject));
+                } else {
+                    System.out.println(response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Aluno> call, Throwable t) {
+
+                t.printStackTrace();
+            }
+        } );
+    }
 
 
 }

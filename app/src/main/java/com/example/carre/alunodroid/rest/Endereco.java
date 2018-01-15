@@ -1,10 +1,12 @@
 package com.example.carre.alunodroid.rest;
 
+import java.io.Serializable;
+
 /**
  * Created by carre on 07/01/2018.
  */
 
-public class Endereco {
+public class Endereco implements Serializable {
 
     private Integer id;
     private String logradouro;
