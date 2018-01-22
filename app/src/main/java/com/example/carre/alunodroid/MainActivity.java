@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.carre.alunodroid.rest.Aluno;
 import com.example.carre.alunodroid.restservice.AlunoService;
@@ -79,13 +80,17 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
 
                 } else {
+                    Toast tost = Toast.makeText(getApplicationContext(), response.errorBody().toString(), Toast.LENGTH_LONG);
+                    tost.show();
                     System.out.println(response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<Aluno> call, Throwable t) {
-
+                CharSequence ms = t.getMessage();
+                Toast tost = Toast.makeText(getApplicationContext(), ms, Toast.LENGTH_LONG);
+                tost.show();
                 t.printStackTrace();
             }
         } );
