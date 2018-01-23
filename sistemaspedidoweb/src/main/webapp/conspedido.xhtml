@@ -14,18 +14,8 @@
 	<menu:menubar></menu:menubar>
 	<p:growl id="messages" showDetail="true" sticky="true"/>
 	<h2>Consulta de Pedidos</h2>
-	<h:form id="form1" prependId="false">
-	    <h:inputHidden id="dscProdutoH" value="#{pedidoBean.produto.descricao}"/>
-	    <h:inputHidden id="idCliente" value="#{pedidoBean.cliente.id}"></h:inputHidden>
-		<h:panelGrid columns="3">
-			<h:outputLabel value="CPF:" onclick="PF('dlg2').show();"/>
-			<h:inputText id="cpf" value="#{pedidoBean.cliente.cpf}" required="true" >
-				<p:ajax event="blur" listener="#{pedidoBean.buscarNomeCliente}" update="nome idCliente"/>
-			</h:inputText>
-			<h:outputLabel id="nome" value="#{pedidoBean.cliente.nome}"/>
-		</h:panelGrid>
-		
-		<p:dialog header="Lista Clientes" widgetVar="dlg2" modal="true" height="300" width="800" position="center" >
+	
+	<p:dialog header="Lista Clientes" widgetVar="dlg2" modal="true" height="300" width="800" position="center" onShow="PF('dlg2').initPosition()">
     		<p:dataTable value="#{pedidoBean.cliente.lstClientes}" var="lst" selectionMode="single" 
 		 		rowIndexVar="count" selection="#{pedidoBean.cliente.selectedCliente}" rowKey="#{lst.id}" paginator="true" rows="10">
 			<p:column headerText="id">
@@ -43,6 +33,19 @@
 			<p:ajax event="rowSelect" listener="#{pedidoBean.cliente.onRowSelect}" update="cpf nome pedidos" oncomplete="PF('dlg2').hide(); $('[id$=ajax]').click();"/>
 		</p:dataTable>
 		</p:dialog>
+	
+	<h:form id="form1" prependId="false">
+	    <h:inputHidden id="dscProdutoH" value="#{pedidoBean.produto.descricao}"/>
+	    <h:inputHidden id="idCliente" value="#{pedidoBean.cliente.id}"></h:inputHidden>
+		<h:panelGrid columns="3">
+			<p:outputLabel value="CPF:" onclick="PF('dlg2').show();"/>
+			<p:inputText id="cpf" value="#{pedidoBean.cliente.cpf}" required="true" >
+				<p:ajax event="blur" listener="#{pedidoBean.buscarNomeCliente}" update="nome idCliente"/>
+			</p:inputText>
+			<p:outputLabel id="nome" value="#{pedidoBean.cliente.nome}"/>
+		</h:panelGrid>
+		
+		
 	</h:form>
 	
 	<p:commandButton id="ajax" update="pedidos" actionListener="#{pedidoBean.buscarPedidos}" style="display:none" />
@@ -81,5 +84,7 @@
 		</p:dataTable>
 		</h:panelGrid>
 	</h:form>
+	
+	
 </h:body>
 </html>

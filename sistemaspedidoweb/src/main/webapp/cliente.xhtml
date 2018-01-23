@@ -17,18 +17,18 @@
 	<h:form prependId="false">
 		<h:inputHidden id="id" value="#{clienteBean.id}"/>
 		<h:panelGrid columns="2">
-			<h:outputLabel value="nome:"/>
-			<h:inputText id="nome" value="#{clienteBean.nome}" required="true" />
+			<p:outputLabel value="nome:"/>
+			<p:inputText id="nome" value="#{clienteBean.nome}" required="true" />
 			
-			<h:outputLabel value="Sobre Nome:"/>
-			<h:inputText id="sobreNome" value="#{clienteBean.sobreNome}" required="true" />
+			<p:outputLabel value="Sobre Nome:"/>
+			<p:inputText id="sobreNome" value="#{clienteBean.sobreNome}" required="true" />
 			
-			<h:outputLabel value="CPF:"/>
-			<h:inputText id="cpf" value="#{clienteBean.cpf}" required="true" />
+			<p:outputLabel value="CPF:"/>
+			<p:inputText id="cpf" value="#{clienteBean.cpf}" required="true" />
 			
 			<h:panelGroup>
-				<h:commandButton value="Salvar" action="#{clienteBean.salvar}"/>
-				<h:commandButton value="Excluir" action="#{clienteBean.excluir}"/>
+				<p:commandButton value="Salvar" action="#{clienteBean.salvar}" ajax="false"/>
+				<p:commandButton value="Excluir" action="#{clienteBean.excluir}" ajax="false"/>
 			</h:panelGroup>
 		</h:panelGrid>
 	
@@ -36,16 +36,16 @@
 		 rowIndexVar="count" selection="#{clienteBean.selectedCliente}" rowKey="#{lst.id}">
 			
 			<p:column headerText="id">
-				<h:outputText value="#{lst.id}"/>
+				<p:outputLabel value="#{lst.id}"/>
 			</p:column>
 			<p:column headerText="nome">
-				<h:outputText value="#{lst.nome}"></h:outputText>
+				<p:outputLabel value="#{lst.nome}"/>
 			</p:column>
 			<p:column headerText="Sobre Nome">
-				<h:outputText value="#{lst.sobreNome}"></h:outputText>
+				<p:outputLabel value="#{lst.sobreNome}"/>
 			</p:column>	
 			<p:column headerText="CPF">
-				<h:outputText value="#{lst.cpf}"></h:outputText>
+				<p:outputLabel value="#{lst.cpf}"/>
 			</p:column>
 			<p:ajax event="rowSelect" listener="#{clienteBean.onRowSelect}" update="id nome sobreNome cpf" />
 		</p:dataTable>

@@ -18,57 +18,28 @@
 	    <h:inputHidden id="dscProdutoH" value="#{pedidoBean.produto.descricao}"/>
 	    <h:inputHidden id="idCliente" value="#{pedidoBean.cliente.id}"></h:inputHidden>
 		<h:panelGrid columns="3">
-			<h:outputLabel value="CPF:" onclick="PF('dlg2').show();"/>
-			<h:inputText id="cpf" value="#{pedidoBean.cliente.cpf}" required="true" >
+			<p:outputLabel value="CPF:" onclick="PF('dlg2').show();"/>
+			<p:inputText id="cpf" value="#{pedidoBean.cliente.cpf}" required="true" >
 				<p:ajax event="blur" listener="#{pedidoBean.buscarNomeCliente}" update="nome idCliente"/>
-			</h:inputText>
-			<h:outputLabel id="nome" value="#{pedidoBean.cliente.nome}"/>
+			</p:inputText>
+			<p:outputLabel id="nome" value="#{pedidoBean.cliente.nome}"/>
 			
-			<h:outputLabel value="Código Produto:" onclick="PF('prod2').show();"/>
-			<h:inputText id="codigo" value="#{pedidoBean.produto.id}" required="true" >
+			<p:outputLabel value="Código Produto:" onclick="PF('prod2').show();"/>
+			<p:inputText id="codigo" value="#{pedidoBean.produto.id}" required="true" >
 				<p:ajax event="blur" listener="#{pedidoBean.buscarNomeProduto}" update="dscProduto dscProdutoH codigo"/>
-			</h:inputText>
-			<h:outputLabel id="dscProduto" value="#{pedidoBean.produto.descricao}"/>
+			</p:inputText>
+			<p:outputLabel id="dscProduto" value="#{pedidoBean.produto.descricao}"/>
 			
-			<h:outputLabel value="Quantidade:"/>
-			<h:inputText id="quantidade" value="#{pedidoBean.quantidade}" required="true" />
+			<p:outputLabel value="Quantidade:"/>
+			<p:inputText id="quantidade" value="#{pedidoBean.quantidade}" required="true" />
 			
 			<h:panelGroup>
 				<p:commandButton ajax="true" value="Incluir" update="items form1" action="#{pedidoBean.incluir}"></p:commandButton>
 			</h:panelGroup>
 		</h:panelGrid>
 		
-			<p:dialog header="Lista Clientes" widgetVar="dlg2" modal="true" height="300" width="800" position="center" >
-    		<p:dataTable value="#{pedidoBean.cliente.lstClientes}" var="lst" selectionMode="single" 
-		 		rowIndexVar="count" selection="#{pedidoBean.cliente.selectedCliente}" rowKey="#{lst.id}" paginator="true" rows="10">
-			<p:column headerText="id">
-				<h:outputText value="#{lst.id}"/>
-			</p:column>
-			<p:column headerText="nome">
-				<h:outputText value="#{lst.nome}"></h:outputText>
-			</p:column>
-			<p:column headerText="Sobre Nome">
-				<h:outputText value="#{lst.sobreNome}"></h:outputText>
-			</p:column>	
-			<p:column headerText="CPF">
-				<h:outputText value="#{lst.cpf}"></h:outputText>
-			</p:column>
-			<p:ajax event="rowSelect" listener="#{pedidoBean.cliente.onRowSelect}" update="cpf nome" oncomplete="PF('dlg2').hide()"/>
-		</p:dataTable>
-		</p:dialog>
-		<p:dialog header="Lista Produtos" widgetVar="prod2" modal="true" height="300" width="800" position="center" >
-    		<p:dataTable value="#{pedidoBean.produto.lstProdutos}" var="lstP" selectionMode="single" 
-		 rowIndexVar="count" selection="#{pedidoBean.produto.selectedProduto}" rowKey="#{lstP.id}">
-			<p:column headerText="id">
-				<h:outputText value="#{lstP.id}"/>
-			</p:column>
-			<p:column headerText="Descrição">
-				<h:outputText value="#{lstP.descricao}"></h:outputText>
-			</p:column>	
-			<p:ajax event="rowSelect" form="" listener="#{pedidoBean.produto.onRowSelect}"
-			oncomplete="PF('prod2').hide();" update="dscProdutoH codigo dscProduto" />
-		</p:dataTable>
-		</p:dialog>
+			
+		
 	</h:form>
 	<h:form prependId="false">	
 		<p:dataTable id="items" value="#{pedidoBean.lstItemPedidos}" var="lst" style="padding-top: 46px">
@@ -77,15 +48,55 @@
 				<h:outputText value="#{lst.produto.id}"/>
 			</p:column>
 			<p:column headerText="nome">
-				<h:outputText value="#{lst.produto.descricao}"></h:outputText>
+				<h:outputText value="#{lst.produto.descricao}"/>
 			</p:column>
 			<p:column headerText="Qtde">
-				<h:outputText value="#{lst.quantidade}"></h:outputText>
+				<h:outputText value="#{lst.quantidade}"/>
 			</p:column>	
 		</p:dataTable>
 	<h:panelGroup>
 				<p:commandButton ajax="true" value="Salvar" update="items" action="#{pedidoBean.salvar}"></p:commandButton>
 	</h:panelGroup>
 	</h:form>
+
+	<p:dialog header="Lista Clientes" widgetVar="dlg2" modal="true" height="300" width="800" position="center" 	onShow="PF('dlg2').initPosition()" dynamic="true" style="position: absolute">
+		<p:dataTable value="#{pedidoBean.cliente.lstClientes}" var="lst"
+			selectionMode="single" rowIndexVar="count"
+			selection="#{pedidoBean.cliente.selectedCliente}" rowKey="#{lst.id}"
+			paginator="true" rows="10">
+			<p:column headerText="id">
+				<h:outputText value="#{lst.id}" />
+			</p:column>
+			<p:column headerText="nome">
+				<h:outputText value="#{lst.nome}" />
+			</p:column>
+			<p:column headerText="Sobre Nome">
+				<h:outputText value="#{lst.sobreNome}" />
+			</p:column>
+			<p:column headerText="CPF">
+				<h:outputText value="#{lst.cpf}" />
+			</p:column>
+			<p:ajax event="rowSelect"
+				listener="#{pedidoBean.cliente.onRowSelect}" update="cpf nome"
+				oncomplete="PF('dlg2').hide()" />
+		</p:dataTable>
+	</p:dialog>
+
+	<p:dialog header="Lista Produtos" widgetVar="prod2" modal="true" height="300" width="800" position="center" onShow="PF('prod2').initPosition()" style="position: absolute">
+		<p:dataTable value="#{pedidoBean.produto.lstProdutos}" var="lstP"
+			selectionMode="single" rowIndexVar="count"
+			selection="#{pedidoBean.produto.selectedProduto}" rowKey="#{lstP.id}">
+			<p:column headerText="id">
+				<h:outputLabel value="#{lstP.id}" />
+			</p:column>
+			<p:column headerText="Descrição">
+				<h:outputLabel value="#{lstP.descricao}" />
+			</p:column>
+			<p:ajax event="rowSelect" form=""
+				listener="#{pedidoBean.produto.onRowSelect}"
+				oncomplete="PF('prod2').hide();"
+				update="dscProdutoH codigo dscProduto" />
+		</p:dataTable>
+	</p:dialog>
 </h:body>
 </html>
